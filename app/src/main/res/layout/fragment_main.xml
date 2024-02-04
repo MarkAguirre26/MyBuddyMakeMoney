@@ -72,7 +72,7 @@
             android:orientation="vertical">
 
             <HorizontalScrollView
-                android:id="@+id/winAndLossResultHorizontalSccrollView"
+                android:id="@+id/trackerPanelHorizontalScroller"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginBottom="5dp"
@@ -80,21 +80,21 @@
                 android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/winAndLossLinearLayout"
+                    android:id="@+id/trackerPanel"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="30dp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="1dp"
-                        android:background="@drawable/win_skip"
-                        android:gravity="center"
-                        android:text="W"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+<!--                    <TextView-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_margin="1dp"-->
+<!--                        android:background="@drawable/win_skip"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="W"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="15sp"-->
+<!--                        android:textStyle="bold" />-->
 
 
                 </LinearLayout>
@@ -263,7 +263,7 @@
                 android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/txtPredictedResult"
+                    android:id="@+id/txtPrediction"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0.75"

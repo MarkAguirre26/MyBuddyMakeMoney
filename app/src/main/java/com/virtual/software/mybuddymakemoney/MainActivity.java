@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BRAIN_NAME = "BrainName";
     private static final String MONEY_MANAGEMENT_NAME = "MoneyManagementName";
     private static final String CARDS_ELEMENT = "CardsElement";
+    private static final String TRACKER_ELEMENT = "TrackerElement";
 
     TextView txtStrategyName, txtMoneyManagementName;
 
@@ -71,20 +72,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static List<String> getCards() {
-        // Assuming you have a List<String> myList
-        List<String> cards = new ArrayList<>();
 
+        List<String> cards = new ArrayList<>();
         String jsonList = preferences.getString(CARDS_ELEMENT, "");
-        System.out.println("jsonList:"+jsonList);
 
         if (!jsonList.equals("")) {
-
             Type listType = new TypeToken<List<String>>() {
             }.getType();
             Gson gson = new Gson();
             cards = gson.fromJson(jsonList, listType);
+//            System.out.println("getCards: " + cards.size());
         }
-
 
         return cards;
     }
@@ -93,36 +91,107 @@ public class MainActivity extends AppCompatActivity {
         List<String> cards = getCards();
         cards.add(card);
 
-
         Gson gson = new Gson();
-
-
         String jsonList = gson.toJson(cards);
-
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(CARDS_ELEMENT, jsonList);
         editor.apply();
     }
 
-    public static void clearCards() {
-        preferences.edit().putString(CARDS_ELEMENT, "").apply();
+    public static List<String> getTrackers() {
+
+        List<String> list = new ArrayList<>();
+        String jsonList = preferences.getString(TRACKER_ELEMENT, "");
+
+        if (!jsonList.equals("")) {
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+            Gson gson = new Gson();
+            list = gson.fromJson(jsonList, listType);
+            System.out.println("getTrackers: " + list.size());
+        }
+
+        return list;
     }
 
-    public void setBrainName(String t) {
+    public static void setTrackers(String status) {
+        List<String> list = getTrackers();
+        list.add(status);
+
+        Gson gson = new Gson();
+        String jsonList = gson.toJson(list);
+        preferences.edit().putString(TRACKER_ELEMENT, jsonList).apply();
+
+
+    }
+
+    public static void removeLastCard() {
+
+        List<String> cards = getCards();
+        if (!cards.isEmpty()) {
+
+            cards.remove(cards.size() - 1);
+
+
+            Gson gson = new Gson();
+            String jsonList = gson.toJson(cards);
+
+//            System.out.println("removeLastCard: " + cards.size());
+
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(CARDS_ELEMENT, jsonList);
+            editor.apply();
+
+        }
+
+
+    }
+
+    public static void removeLastTrackerElement() {
+
+        List<String> list = getTrackers();
+        if (!list.isEmpty()) {
+
+            list.remove(list.size() - 1);
+
+
+            Gson gson = new Gson();
+            String jsonList = gson.toJson(list);
+
+            System.out.println("removeLastTrackerElement A: " + list.size());
+
+
+            preferences.edit().putString(TRACKER_ELEMENT, jsonList).apply();
+
+
+        }
+
+        List<String> l = getTrackers();
+        System.out.println("removeLastTrackerElement B: " + l.size());
+    }
+
+    public static void clearCards() {
+        preferences.edit().putString(CARDS_ELEMENT, "").apply();
+        preferences.edit().putString(TRACKER_ELEMENT, "").apply();
+    }
+
+
+    public static void setBrainName(String t) {
         preferences.edit().putString(BRAIN_NAME, t).apply();
     }
 
-    public void setMoneyManagementName(String t) {
+    public static void setMoneyManagementName(String t) {
         preferences.edit().putString(MONEY_MANAGEMENT_NAME, t).apply();
     }
 
-    public String getMoneyManagementName() {
+    public static String getMoneyManagementName() {
         String mm = preferences.getString(MONEY_MANAGEMENT_NAME, MoneyManagement.OSCAR);
         return mm;
     }
 
 
-    public String getBrainName() {
+    public static String getBrainName() {
         String brain = preferences.getString(BRAIN_NAME, Brains.CHOP_STREAK);
         return brain;
     }
