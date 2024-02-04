@@ -1,0 +1,11 @@
+<!-- res/drawable/circular_shape.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+<!--    &lt;!&ndash; Set the border color and width &ndash;&gt;-->
+<!--    <stroke-->
+<!--        android:width="3dp"-->
+<!--        android:color="@color/player_button"/> &lt;!&ndash; Set the border color &ndash;&gt;-->
+
+
+    <solid android:color="@color/player_button"/> <!-- Set the background color of the circle -->
+</shape>
