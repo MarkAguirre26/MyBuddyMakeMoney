@@ -18,7 +18,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements FragmentMain.UpdateBaseBetAmount {
+public class MainActivity extends AppCompatActivity implements FragmentMain.UpdateSetting {
     public static ViewPager viewPager;
     public static MyPagerAdapter pagerAdapter;
 
@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
     private static final String STOP_LOSS = "StopLoss";
     private static final String STOP_PROFIT = "StopProfit";
 
-
+    private static final String SHIELD_LOSE = "ShieldLoss";
+    private static final String SHIELD_WIN = "ShieldWin";
     TextView txtStrategyName, txtMoneyManagementName;
 
     double baseBetAmount;
@@ -113,16 +114,16 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         return list;
     }
 
-    public static void setTrackerList(String input) {
-        List<String> list = getTrackerList();
-        list.add(input);
-
-        Gson gson = new Gson();
-        String jsonList = gson.toJson(list);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(TRACKER_ELEMENT, jsonList);
-        editor.apply();
-    }
+//    public static void setTrackerList(String input) {
+//        List<String> list = getTrackerList();
+//        list.add(input);
+//
+//        Gson gson = new Gson();
+//        String jsonList = gson.toJson(list);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString(TRACKER_ELEMENT, jsonList);
+//        editor.apply();
+//    }
 
 
     public static void setCards(String card) {
@@ -158,26 +159,26 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
 
     }
 
-    public static void removeLastItemFromTrackerList() {
-
-        List<String> list = getTrackerList();
-        if (!list.isEmpty()) {
-
-            list.remove(list.size() - 1);
-
-
-            Gson gson = new Gson();
-            String jsonList = gson.toJson(list);
-
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(TRACKER_ELEMENT, jsonList);
-            editor.apply();
-
-        }
-
-
-    }
+//    public static void removeLastItemFromTrackerList() {
+//
+//        List<String> list = getTrackerList();
+//        if (!list.isEmpty()) {
+//
+//            list.remove(list.size() - 1);
+//
+//
+//            Gson gson = new Gson();
+//            String jsonList = gson.toJson(list);
+//
+//
+//            SharedPreferences.Editor editor = preferences.edit();
+//            editor.putString(TRACKER_ELEMENT, jsonList);
+//            editor.apply();
+//
+//        }
+//
+//
+//    }
 
 
     public static void clearCards() {
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         String brain = preferences.getString(BRAIN_NAME, Brains.CHOP_STREAK);
         return brain;
     }
+
 
     @Override
     public void onBackPressed() {
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
                 String selectedFragmentName = pagerAdapter.getPageTitle(position).toString();
                 if (selectedFragmentName.equals("FragmentBrains")) {
                     txtStrategyName.setText("Brains");
-                    txtMoneyManagementName.setText("Select you strategy");
+                    txtMoneyManagementName.setText("Select your strategy");
                 } else if (selectedFragmentName.equals("FragmentMain")) {
                     txtStrategyName.setText(getBrainName());
                     txtMoneyManagementName.setText(getMoneyManagementName());
@@ -264,14 +266,19 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
                     String baseAmount = preferences.getString(BASE_UNIT, "0.1");
                     int stopProfit = preferences.getInt(STOP_PROFIT, 0);
                     int stopLoss = preferences.getInt(STOP_LOSS, 0);
-                    System.out.println(stopProfit);
-                    System.out.println(stopLoss);
+                    int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
+                    int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
 
                     onUpdateBaseBetAmount(baseAmount);
+                    onUpdateShield(ShieldLoss, ShieldWin);
+                    onUpdateStopProfit(stopProfit);
+                    onUpdateStopLoss(stopLoss);
 
                 } else if (selectedFragmentName.equals("FragmentSetting")) {
                     txtStrategyName.setText("Money Management");
                     txtMoneyManagementName.setText("Modify your preferred setup");
+
+
                 }
             }
 
@@ -285,10 +292,35 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
 
     @Override
     public void onUpdateBaseBetAmount(String newText) {
-        // Update the TextView in the Activity
-        TextView textView = findViewById(R.id.txtBaseBet);
-        if (textView != null) {
-            textView.setText(newText);
+
+        TextView txtBaseBet = findViewById(R.id.txtBaseBet);
+        if (txtBaseBet != null) {
+            txtBaseBet.setText(newText);
+        }
+    }
+
+    @Override
+    public void onUpdateShield(int NoOfLoss, int win) {
+        TextView txt = findViewById(R.id.txtShield);
+        if (txt != null) {
+            txt.setText(NoOfLoss + "-" + win);
+        }
+    }
+
+
+    @Override
+    public void onUpdateStopLoss(int unit) {
+        TextView txt = findViewById(R.id.txtStopLoss);
+        if (txt != null) {
+            txt.setText(String.valueOf(unit));
+        }
+    }
+
+    @Override
+    public void onUpdateStopProfit(int unit) {
+        TextView txt = findViewById(R.id.txtStopProfit);
+        if (txt != null) {
+            txt.setText(String.valueOf(unit));
         }
     }
 }

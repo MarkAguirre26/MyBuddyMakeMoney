@@ -699,16 +699,17 @@
                                 android:layout_gravity="center"
                                 android:background="@color/purple"
                                 android:gravity="center"
-                                android:text="@string/peak"
+                                android:text="Stop Loss"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <TextView
+                                android:id="@+id/txtStopLoss"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
-                                android:text="0.0%"
+                                android:text="0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_black"
                                 android:textSize="18sp" />
@@ -731,16 +732,17 @@
                                 android:layout_gravity="center"
                                 android:background="@color/purple"
                                 android:gravity="center"
-                                android:text="@string/trough"
+                                android:text="Stop Profit"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <TextView
+                                android:id="@+id/txtStopProfit"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
-                                android:text="0.0%"
+                                android:text="0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_black"
                                 android:textSize="18sp" />
@@ -764,16 +766,17 @@
                                 android:layout_gravity="center"
                                 android:background="@color/purple"
                                 android:gravity="center"
-                                android:text="@string/drawdown"
+                                android:text="Shield"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="18sp" />
 
                             <TextView
+                                android:id="@+id/txtShield"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@color/white"
-                                android:text="0.0%"
+                                android:text="0-0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_black"
                                 android:textSize="18sp" />

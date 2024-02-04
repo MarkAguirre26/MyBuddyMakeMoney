@@ -26,7 +26,7 @@
             <ListView
                 android:id="@+id/listViewMoneyManagement"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="250dp"
                 android:padding="10dp" />
 
             <TextView
@@ -72,6 +72,41 @@
 
             <EditText
                 android:id="@+id/txtStopLossUnit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edit_text_style"
+                android:numeric="integer"
+                android:paddingStart="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginTop="20dp"
+                android:text="Shield"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No. of Lose" />
+
+            <EditText
+                android:id="@+id/txtLossShield"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edit_text_style"
+                android:numeric="decimal"
+                android:paddingStart="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No. of Win" />
+
+            <EditText
+                android:id="@+id/txtWinShield"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@drawable/edit_text_style"

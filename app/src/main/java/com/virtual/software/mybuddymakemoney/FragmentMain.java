@@ -27,7 +27,6 @@ import java.util.Optional;
  */
 public class FragmentMain extends Fragment {
 
-    private UpdateBaseBetAmount updateBaseBetAmount;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,6 +45,12 @@ public class FragmentMain extends Fragment {
     LinearLayout trackerPanel;
     HorizontalScrollView trackerPanelHorizontalScroller;
     TextView txtSkip;
+
+    private final String STOP_LOSS = "StopLoss";
+    private final String STOP_PROFIT = "StopProfit";
+
+    private final String SHIELD_LOSE = "ShieldLoss";
+    private final String SHIELD_WIN = "ShieldWin";
 
     private SharedPreferences preferences;
     private final String PREF_NAME = "your_preference_name";
@@ -74,8 +79,16 @@ public class FragmentMain extends Fragment {
     }
 
 
-    public interface UpdateBaseBetAmount {
+    public interface UpdateSetting {
+
         void onUpdateBaseBetAmount(String newText);
+
+        void onUpdateShield(int NoOfLoss, int NoOfWin);
+
+        void onUpdateStopLoss(int unit);
+
+        void onUpdateStopProfit(int unit);
+
     }
 
 
@@ -85,7 +98,6 @@ public class FragmentMain extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-
         }
     }
 
@@ -105,9 +117,23 @@ public class FragmentMain extends Fragment {
         txtHand = view.findViewById(R.id.txtHand);
         txtBaseBet = view.findViewById(R.id.txtBaseBet);
 
+        TextView txtStopLoss = view.findViewById(R.id.txtStopLoss);
+        TextView txtStopProfit = view.findViewById(R.id.txtStopProfit);
+        TextView txtShield = view.findViewById(R.id.txtShield);
+
+
         preferences = getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String BaseUnitAmount = preferences.getString(BASE_UNIT, String.valueOf(baseBetAmount));
+        int stopProfit = preferences.getInt(STOP_PROFIT, 0);
+        int stopLoss = preferences.getInt(STOP_LOSS, 0);
+        int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
+        int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
+
+
         txtBaseBet.setText(BaseUnitAmount);
+        txtStopProfit.setText(String.valueOf(stopProfit));
+        txtStopLoss.setText(String.valueOf(stopLoss));
+        txtShield.setText(ShieldLoss + "-" + ShieldWin);
 
 
         AppCompatButton btnPlayer = view.findViewById(R.id.btnPlayer);
@@ -190,11 +216,6 @@ public class FragmentMain extends Fragment {
         return view;
     }
 
-    public void setBaseBetAmount(String amount) {
-        if (txtBaseBet != null) {
-            txtBaseBet.setText(amount);
-        }
-    }
 
     private void removeLastItemFromRoad() {
 
@@ -210,13 +231,13 @@ public class FragmentMain extends Fragment {
                             @Override
                             public void run() {
 
-                                MainActivity.removeLastItemFromTrackerList();
+//                                MainActivity.removeLastItemFromTrackerList();
 
 // Check if there is at least one child
-//                                if (trackerPanel.getChildCount() > 0) {
-//                                    // Remove the last child
-//                                    trackerPanel.removeViewAt(trackerPanel.getChildCount() - 1);
-//                                }
+                                if (trackerPanel.getChildCount() > 0) {
+                                    // Remove the last child
+                                    trackerPanel.removeViewAt(trackerPanel.getChildCount() - 1);
+                                }
 
 
                                 MainActivity.removeLastCard();
@@ -268,13 +289,12 @@ public class FragmentMain extends Fragment {
             textView.setBackground(getResources().getDrawable(R.drawable.button_banker));
         }
 
-//
-//        if (MainActivity.getCards().size() == 1) {
-//            textView.setText("*");
-//            textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
-//        } else {
-        textView.setText(input);
-//        }
+        if (MainActivity.getCards().size() == 1) {
+            textView.setText("*");
+            textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
+        } else {
+            textView.setText(input);
+        }
 
         if (txtSkip.getText().equals("Yes")) {
             textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
@@ -283,7 +303,6 @@ public class FragmentMain extends Fragment {
 
 
         textView.setGravity(android.view.Gravity.CENTER);
-
         textView.setTextColor(getResources().getColor(R.color.white)); // Replace with your color resource
         textView.setTextSize(15);
         textView.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -304,12 +323,6 @@ public class FragmentMain extends Fragment {
         });
     }
 
-    public void updateSelectedFragment(String name) {
-        String selectedFragmentName = name;
-        if (txtTitle != null) {
-            txtTitle.setText(selectedFragmentName);
-        }
-    }
 
     private void fillTable(String[][] table, List<String> listOfItemFromRoad) {
         int numRows = table.length;
@@ -467,25 +480,27 @@ public class FragmentMain extends Fragment {
             }
             //-------------------------------------------------
             if (!isUndo) {
-                MainActivity.setTrackerList(status);
+//                MainActivity.setTrackerList(status);
+                setTrackerView(status);
             }
 
-            List<String> trackerList = MainActivity.getTrackerList();
+
+//            List<String> trackerList = MainActivity.getTrackerList();
 
             setPredictionResource(item);
 
-            trackerPanel.removeAllViews();
-            for (String t : trackerList) {
-                setTrackerView(t);
-            }
+//            trackerPanel.removeAllViews();
+//            for (String t : trackerList) {
+//                setTrackerView(t);
+//            }
 
-            View firstChild = trackerPanel.getChildAt(0);
-//            // Check if the first child is a TextView
-            if (firstChild instanceof TextView) {
-                // Update the text of the TextView
-                ((TextView) firstChild).setText("*");
-                ((TextView) firstChild).setBackground(getResources().getDrawable(R.drawable.button_skip));
-            }
+//            View firstChild = trackerPanel.getChildAt(0);
+////            // Check if the first child is a TextView
+//            if (firstChild instanceof TextView) {
+//                // Update the text of the TextView
+//                ((TextView) firstChild).setText("*");
+//                ((TextView) firstChild).setBackground(getResources().getDrawable(R.drawable.button_skip));
+//            }
         }
 
     }
