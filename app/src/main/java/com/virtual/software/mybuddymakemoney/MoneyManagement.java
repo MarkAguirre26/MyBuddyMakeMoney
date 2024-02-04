@@ -74,7 +74,7 @@ public class MoneyManagement {
     public static List<MoneyManagement> getMoneyManagementList() {
         List<MoneyManagement> itemList = new ArrayList<>();
         itemList.add(new MoneyManagement(MoneyManagement.ORC, MoneyManagement.ORC_DESCRIPTION, 0, false));
-        itemList.add(new MoneyManagement(MoneyManagement.OSCAR, MoneyManagement.OSCAR_DESCRIPTION, 0, false));
+        itemList.add(new MoneyManagement(MoneyManagement.OSCAR, MoneyManagement.OSCAR_DESCRIPTION, 0, true));
         itemList.add(new MoneyManagement(MoneyManagement.MOON, MoneyManagement.MOON_DESCRIPTION, 0, false));
         itemList.add(new MoneyManagement(MoneyManagement.Mang_B, MoneyManagement.Mang_B_DESCRIPTION, 0, false));
 

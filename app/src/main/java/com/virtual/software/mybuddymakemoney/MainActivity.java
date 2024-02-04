@@ -6,9 +6,9 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.gson.Gson;
@@ -18,10 +18,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    private ViewPager viewPager;
-    private MyPagerAdapter pagerAdapter;
+public class MainActivity extends AppCompatActivity implements FragmentMain.UpdateBaseBetAmount {
+    public static ViewPager viewPager;
+    public static MyPagerAdapter pagerAdapter;
 
+    private final String BASE_UNIT = "BaseUnit";
     private static SharedPreferences preferences;
     private static final String PREF_NAME = "your_preference_name";
     private static final String BRAIN_NAME = "BrainName";
@@ -29,13 +30,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String CARDS_ELEMENT = "CardsElement";
     private static final String TRACKER_ELEMENT = "TrackerElement";
 
+    private static final String STOP_LOSS = "StopLoss";
+    private static final String STOP_PROFIT = "StopProfit";
+
+
     TextView txtStrategyName, txtMoneyManagementName;
 
+    double baseBetAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         viewPager = findViewById(R.id.viewPager);
 
         txtStrategyName = findViewById(R.id.txtStrategyName);
@@ -47,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         preferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+//        preferences.edit().putString(BASE_UNIT, "0").apply();
+//        preferences.edit().putInt(STOP_PROFIT, 0).apply();
+//        preferences.edit().putInt(STOP_LOSS, 0).apply();
 
 
         // Set the default fragment to Fragment1
@@ -81,11 +91,39 @@ public class MainActivity extends AppCompatActivity {
             }.getType();
             Gson gson = new Gson();
             cards = gson.fromJson(jsonList, listType);
-//            System.out.println("getCards: " + cards.size());
+
         }
 
         return cards;
     }
+
+    public static List<String> getTrackerList() {
+
+        List<String> list = new ArrayList<>();
+        String jsonList = preferences.getString(TRACKER_ELEMENT, "");
+
+        if (!jsonList.equals("")) {
+            Type listType = new TypeToken<List<String>>() {
+            }.getType();
+            Gson gson = new Gson();
+            list = gson.fromJson(jsonList, listType);
+
+        }
+
+        return list;
+    }
+
+    public static void setTrackerList(String input) {
+        List<String> list = getTrackerList();
+        list.add(input);
+
+        Gson gson = new Gson();
+        String jsonList = gson.toJson(list);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(TRACKER_ELEMENT, jsonList);
+        editor.apply();
+    }
+
 
     public static void setCards(String card) {
         List<String> cards = getCards();
@@ -98,32 +136,6 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public static List<String> getTrackers() {
-
-        List<String> list = new ArrayList<>();
-        String jsonList = preferences.getString(TRACKER_ELEMENT, "");
-
-        if (!jsonList.equals("")) {
-            Type listType = new TypeToken<List<String>>() {
-            }.getType();
-            Gson gson = new Gson();
-            list = gson.fromJson(jsonList, listType);
-            System.out.println("getTrackers: " + list.size());
-        }
-
-        return list;
-    }
-
-    public static void setTrackers(String status) {
-        List<String> list = getTrackers();
-        list.add(status);
-
-        Gson gson = new Gson();
-        String jsonList = gson.toJson(list);
-        preferences.edit().putString(TRACKER_ELEMENT, jsonList).apply();
-
-
-    }
 
     public static void removeLastCard() {
 
@@ -136,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
             Gson gson = new Gson();
             String jsonList = gson.toJson(cards);
 
-//            System.out.println("removeLastCard: " + cards.size());
-
 
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(CARDS_ELEMENT, jsonList);
@@ -148,9 +158,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void removeLastTrackerElement() {
+    public static void removeLastItemFromTrackerList() {
 
-        List<String> list = getTrackers();
+        List<String> list = getTrackerList();
         if (!list.isEmpty()) {
 
             list.remove(list.size() - 1);
@@ -159,17 +169,16 @@ public class MainActivity extends AppCompatActivity {
             Gson gson = new Gson();
             String jsonList = gson.toJson(list);
 
-            System.out.println("removeLastTrackerElement A: " + list.size());
 
-
-            preferences.edit().putString(TRACKER_ELEMENT, jsonList).apply();
-
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(TRACKER_ELEMENT, jsonList);
+            editor.apply();
 
         }
 
-        List<String> l = getTrackers();
-        System.out.println("removeLastTrackerElement B: " + l.size());
+
     }
+
 
     public static void clearCards() {
         preferences.edit().putString(CARDS_ELEMENT, "").apply();
@@ -194,6 +203,12 @@ public class MainActivity extends AppCompatActivity {
     public static String getBrainName() {
         String brain = preferences.getString(BRAIN_NAME, Brains.CHOP_STREAK);
         return brain;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(getApplicationContext(), "Exit", Toast.LENGTH_SHORT).show();
     }
 
     private void showAlertForChangingBrain(String b) {
@@ -236,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 // The position variable holds the index of the currently selected fragment
+
+
                 String selectedFragmentName = pagerAdapter.getPageTitle(position).toString();
                 if (selectedFragmentName.equals("FragmentBrains")) {
                     txtStrategyName.setText("Brains");
@@ -243,6 +260,15 @@ public class MainActivity extends AppCompatActivity {
                 } else if (selectedFragmentName.equals("FragmentMain")) {
                     txtStrategyName.setText(getBrainName());
                     txtMoneyManagementName.setText(getMoneyManagementName());
+
+                    String baseAmount = preferences.getString(BASE_UNIT, "0.1");
+                    int stopProfit = preferences.getInt(STOP_PROFIT, 0);
+                    int stopLoss = preferences.getInt(STOP_LOSS, 0);
+                    System.out.println(stopProfit);
+                    System.out.println(stopLoss);
+
+                    onUpdateBaseBetAmount(baseAmount);
+
                 } else if (selectedFragmentName.equals("FragmentSetting")) {
                     txtStrategyName.setText("Money Management");
                     txtMoneyManagementName.setText("Modify your preferred setup");
@@ -256,45 +282,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateSelectedFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + viewPager.getCurrentItem());
-        if (fragment instanceof FragmentMain) {
-            ((FragmentMain) fragment).updateSelectedFragment(pagerAdapter.getSelectedFragmentName());
+
+    @Override
+    public void onUpdateBaseBetAmount(String newText) {
+        // Update the TextView in the Activity
+        TextView textView = findViewById(R.id.txtBaseBet);
+        if (textView != null) {
+            textView.setText(newText);
         }
     }
-
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.viewPager, fragment)
-                .commit();
-    }
-
-
-//    private class MyPagerAdapter extends FragmentPagerAdapter {
-//        MyPagerAdapter(FragmentManager fm) {
-//            super(fm);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            switch (position) {
-//                case 0:
-//                    return new FragmentBrains();
-//                case 1:
-//                    FragmentMain fragmentMain = new FragmentMain();
-//                    return fragmentMain;
-//                case 2:
-//                    return new FragmentSetting();
-//                default:
-//                    return null;
-//            }
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return 3;
-//        }
-//    }
-
-
 }

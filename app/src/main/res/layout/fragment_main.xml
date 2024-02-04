@@ -7,7 +7,6 @@
     tools:context=".FragmentMain">
 
 
-
     <LinearLayout
         android:id="@+id/RoardHeaderLinearlayout"
         android:layout_width="match_parent"
@@ -74,7 +73,7 @@
             <HorizontalScrollView
                 android:id="@+id/trackerPanelHorizontalScroller"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:scrollX="0dp"
                 android:scrollbars="none">
@@ -85,16 +84,16 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-<!--                    <TextView-->
-<!--                        android:layout_width="30dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_margin="1dp"-->
-<!--                        android:background="@drawable/win_skip"-->
-<!--                        android:gravity="center"-->
-<!--                        android:text="W"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="15sp"-->
-<!--                        android:textStyle="bold" />-->
+                    <!--                    <TextView-->
+                    <!--                        android:layout_width="30dp"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        android:layout_margin="1dp"-->
+                    <!--                        android:background="@drawable/win_skip"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:text="W"-->
+                    <!--                        android:textColor="@color/white"-->
+                    <!--                        android:textSize="15sp"-->
+                    <!--                        android:textStyle="bold" />-->
 
 
                 </LinearLayout>
@@ -292,6 +291,7 @@
                         android:textSize="18dp" />
 
                     <TextView
+                        android:id="@+id/txtBaseBet"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1.5"

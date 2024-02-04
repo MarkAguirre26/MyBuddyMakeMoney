@@ -1,5 +1,7 @@
 package com.virtual.software.mybuddymakemoney;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -25,6 +27,8 @@ import java.util.Optional;
  */
 public class FragmentMain extends Fragment {
 
+    private UpdateBaseBetAmount updateBaseBetAmount;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,14 +38,18 @@ public class FragmentMain extends Fragment {
     private String mParam1;
     private String mParam2;
     TableLayout tableLayout;
-
+    double baseBetAmount = 0.1;
     boolean isUndo = false;
-    TextView txtTitle, txtHand, txtPlayerHandCount, txtbankerHandCount;
+    TextView txtTitle, txtHand, txtPlayerHandCount, txtbankerHandCount, txtBaseBet;
 
-
+    private final String BASE_UNIT = "BaseUnit";
     LinearLayout trackerPanel;
     HorizontalScrollView trackerPanelHorizontalScroller;
     TextView txtSkip;
+
+    private SharedPreferences preferences;
+    private final String PREF_NAME = "your_preference_name";
+
 
     public FragmentMain() {
         // Required empty public constructor
@@ -63,6 +71,11 @@ public class FragmentMain extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+
+    public interface UpdateBaseBetAmount {
+        void onUpdateBaseBetAmount(String newText);
     }
 
 
@@ -90,6 +103,11 @@ public class FragmentMain extends Fragment {
         txtPlayerHandCount = view.findViewById(R.id.txtPlayerHandCount);
         txtbankerHandCount = view.findViewById(R.id.txtbankerHandCount);
         txtHand = view.findViewById(R.id.txtHand);
+        txtBaseBet = view.findViewById(R.id.txtBaseBet);
+
+        preferences = getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String BaseUnitAmount = preferences.getString(BASE_UNIT, String.valueOf(baseBetAmount));
+        txtBaseBet.setText(BaseUnitAmount);
 
 
         AppCompatButton btnPlayer = view.findViewById(R.id.btnPlayer);
@@ -172,6 +190,11 @@ public class FragmentMain extends Fragment {
         return view;
     }
 
+    public void setBaseBetAmount(String amount) {
+        if (txtBaseBet != null) {
+            txtBaseBet.setText(amount);
+        }
+    }
 
     private void removeLastItemFromRoad() {
 
@@ -187,7 +210,14 @@ public class FragmentMain extends Fragment {
                             @Override
                             public void run() {
 
-                                MainActivity.removeLastTrackerElement();
+                                MainActivity.removeLastItemFromTrackerList();
+
+// Check if there is at least one child
+//                                if (trackerPanel.getChildCount() > 0) {
+//                                    // Remove the last child
+//                                    trackerPanel.removeViewAt(trackerPanel.getChildCount() - 1);
+//                                }
+
 
                                 MainActivity.removeLastCard();
 //                                // Now that the view is removed, execute the other operations
@@ -227,8 +257,8 @@ public class FragmentMain extends Fragment {
 
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                50, // width
-                50);
+                60, // width
+                60);
         layoutParams.setMargins(1, 1, 1, 1);
         textView.setLayoutParams(layoutParams);
 
@@ -261,9 +291,7 @@ public class FragmentMain extends Fragment {
         trackerPanel.addView(textView);
         scrollToEnd();
 
-        //put a bit delay
 
-//        }
     }
 
     private void scrollToEnd() {
@@ -439,10 +467,10 @@ public class FragmentMain extends Fragment {
             }
             //-------------------------------------------------
             if (!isUndo) {
-                MainActivity.setTrackers(status);
+                MainActivity.setTrackerList(status);
             }
 
-            List<String> trackerList = MainActivity.getTrackers();
+            List<String> trackerList = MainActivity.getTrackerList();
 
             setPredictionResource(item);
 
@@ -452,7 +480,7 @@ public class FragmentMain extends Fragment {
             }
 
             View firstChild = trackerPanel.getChildAt(0);
-            // Check if the first child is a TextView
+//            // Check if the first child is a TextView
             if (firstChild instanceof TextView) {
                 // Update the text of the TextView
                 ((TextView) firstChild).setText("*");

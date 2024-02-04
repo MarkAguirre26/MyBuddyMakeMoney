@@ -66,14 +66,14 @@ public class FragmentBrains extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_strategies, container, false);
+        View view = inflater.inflate(R.layout.fragment_brains, container, false);
 
 
-        GetMoneyManagementList(view);
+        GetBrainsList(view);
         return view;
     }
 
-    private void GetMoneyManagementList(View view) {
+    private void GetBrainsList(View view) {
 
         ListView listView = view.findViewById(R.id.listViewStrategy);
         brains = new Brains().getBrains();

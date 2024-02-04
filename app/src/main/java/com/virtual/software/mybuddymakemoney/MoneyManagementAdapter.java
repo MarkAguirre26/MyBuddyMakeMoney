@@ -40,7 +40,7 @@ public class MoneyManagementAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item, null);
+            convertView = inflater.inflate(R.layout.list_item_setting, null);
         }
 
         TextView fieldNameTextView = convertView.findViewById(R.id.fieldNameTextView);
