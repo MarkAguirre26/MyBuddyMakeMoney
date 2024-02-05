@@ -18,7 +18,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +44,8 @@ public class FragmentMain extends Fragment {
     LinearLayout trackerPanel;
     HorizontalScrollView trackerPanelHorizontalScroller;
     TextView txtSkip;
+    CardDataSource cardDatabaseHelper;
+
 
     private final String STOP_LOSS = "StopLoss";
     private final String STOP_PROFIT = "StopProfit";
@@ -89,6 +90,7 @@ public class FragmentMain extends Fragment {
 
         void onUpdateStopProfit(int unit);
 
+
     }
 
 
@@ -106,6 +108,10 @@ public class FragmentMain extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        cardDatabaseHelper = new CardDataSource(getActivity());
+//        trackerDatabaseHelper = new TrackerDatabaseHelper(getActivity());
+
 
         trackerPanel = view.findViewById(R.id.trackerPanel);
         trackerPanelHorizontalScroller = view.findViewById(R.id.trackerPanelHorizontalScroller);
@@ -143,8 +149,8 @@ public class FragmentMain extends Fragment {
         AppCompatButton btnUndo = view.findViewById(R.id.btnUndo);
 
         //get the previous data
-        List<String> list = MainActivity.getCards();
-        setBeadRoadView(6, 20, 50, list);
+
+        setBeadRoadView(6, 20, 50);
 
 
         btnPlayer.setOnClickListener(new View.OnClickListener() {
@@ -152,9 +158,8 @@ public class FragmentMain extends Fragment {
             public void onClick(View v) {
                 playClickedSound();
                 isUndo = false;
-                MainActivity.setCards("P");
-                List<String> list = MainActivity.getCards();
-                setBeadRoadView(6, 20, 50, list);
+
+                saveCardItem("P");
 
 
             }
@@ -166,15 +171,11 @@ public class FragmentMain extends Fragment {
                 playClickedSound();
                 isUndo = false;
 
-                MainActivity.clearCards();
-
-                List<String> list = MainActivity.getCards();
-                setBeadRoadView(6, 20, 50, list);
-                trackerPanel.removeAllViews();
-                setPredictionResource("wait");
+                ResetSAll();
 
             }
         });
+
 
         btnBanker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,10 +183,7 @@ public class FragmentMain extends Fragment {
 
                 playClickedSound();
                 isUndo = false;
-
-                MainActivity.setCards("B");
-                List<String> list = MainActivity.getCards();
-                setBeadRoadView(6, 20, 50, list);
+                saveCardItem("B");
 
 
             }
@@ -203,62 +201,63 @@ public class FragmentMain extends Fragment {
         btnUndo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<String> list = MainActivity.getCards();
-                if (list.size() > 0) {
-                    isUndo = true;
-                    playClickedSound();
-                    removeLastItemFromRoad();
 
+                isUndo = true;
+                playClickedSound();
+
+                cardDatabaseHelper.open();
+                List<Card> AllCards = cardDatabaseHelper.getAllCards();
+                cardDatabaseHelper.close();
+
+                //this is to reset the view
+                setPredictionResource(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset"));
+                //then re establish
+
+                // Example usage: Deleting the last row (assuming there's at least one row in the database)
+                if (!AllCards.isEmpty()) {
+                    Card lastCard = AllCards.get(AllCards.size() - 1);
+                    cardDatabaseHelper.open();
+                    cardDatabaseHelper.deleteCard(lastCard.getId());
+                    cardDatabaseHelper.close();
+                } else {
+//                    ResetSAll();
                 }
+                setBeadRoadView(6, 20, 20);
+
+
             }
         });
 
         return view;
     }
 
+    private void ResetSAll() {
 
-    private void removeLastItemFromRoad() {
-
-        int childCount = trackerPanel.getChildCount();
-        if (childCount > 0) {
-            try {
-                // Remove the last child view
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        requireActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-//                                MainActivity.removeLastItemFromTrackerList();
-
-// Check if there is at least one child
-                                if (trackerPanel.getChildCount() > 0) {
-                                    // Remove the last child
-                                    trackerPanel.removeViewAt(trackerPanel.getChildCount() - 1);
-                                }
+        cardDatabaseHelper.open();
+        cardDatabaseHelper.deleteAllCards();
+        cardDatabaseHelper.close();
 
 
-                                MainActivity.removeLastCard();
-//                                // Now that the view is removed, execute the other operations
-                                List<String> list = MainActivity.getCards();
-                                // Ensure setBeadRoadView method handles the list correctly
-                                setBeadRoadView(6, 20, 50, list);
+        trackerPanel.removeAllViews();
+        setBeadRoadView(6, 20, 50);
+        setPredictionResource(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset"));
+    }
 
+    private void saveCardItem(String cardItem) {
 
-                            }
-                        });
-                    }
-                }).start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        cardDatabaseHelper.open();
+        int count = cardDatabaseHelper.getAllCardNames().size();
+        cardDatabaseHelper.close();
+
+        cardDatabaseHelper.open();
+        if (count == 0) {
+            cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes"));
+        } else {
+            cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", txtSkip.getText().toString()));
         }
+        cardDatabaseHelper.close();
 
-//-----------------------------------------------------------------
-
-
+        setBeadRoadView(6, 20, 50);
     }
 
 
@@ -273,7 +272,12 @@ public class FragmentMain extends Fragment {
 
     }
 
-    private void setTrackerView(String input) {
+    private void setTrackerView(Card card) {
+
+        String cardName = card.getName();
+        String prediction = card.getPrediction();
+        String isInitialize = card.getInitialize();
+        String isWait = card.getWait();
 
 
         TextView textView = new TextView(getContext());
@@ -283,25 +287,26 @@ public class FragmentMain extends Fragment {
         layoutParams.setMargins(1, 1, 1, 1);
         textView.setLayoutParams(layoutParams);
 
-        if (input.equals("W")) {
+        if (cardName.equalsIgnoreCase(prediction)) {
+            textView.setText("W");
             textView.setBackground(getResources().getDrawable(R.drawable.win));
         } else {
+            textView.setText("L");
             textView.setBackground(getResources().getDrawable(R.drawable.button_banker));
         }
 
-        if (MainActivity.getCards().size() == 1) {
-            textView.setText("*");
-            textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
-        } else {
-            textView.setText(input);
-        }
 
-        if (txtSkip.getText().equals("Yes")) {
+        if (isWait.equalsIgnoreCase("Yes")) {
             textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
             setSkip(false);
         }
+        if (isInitialize.equalsIgnoreCase("yes")) {
+            textView.setText("*");
+            textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
+        }
 
 
+//        textView.setText(cardName);
         textView.setGravity(android.view.Gravity.CENTER);
         textView.setTextColor(getResources().getColor(R.color.white)); // Replace with your color resource
         textView.setTextSize(15);
@@ -310,7 +315,7 @@ public class FragmentMain extends Fragment {
         trackerPanel.addView(textView);
         scrollToEnd();
 
-
+//        }
     }
 
     private void scrollToEnd() {
@@ -358,9 +363,15 @@ public class FragmentMain extends Fragment {
 
     }
 
-    public void setBeadRoadView(int numRows, int numColumns, int textViewSize, List<String> listOfItemFromRoad) {
+    public void setBeadRoadView(int numRows, int numColumns, int textViewSize) {
+
+
+        cardDatabaseHelper.open();
+        List<String> list = cardDatabaseHelper.getAllCardNames();
+        cardDatabaseHelper.close();
+
         String[][] table = new String[numRows][numColumns];
-        fillTable(table, listOfItemFromRoad);
+        fillTable(table, list);
 
         // Check if the number of child views matches the expected count
         if (tableLayout.getChildCount() != numRows) {
@@ -394,6 +405,7 @@ public class FragmentMain extends Fragment {
                     textView.setText(value + "\t");
                     textView.setBackgroundResource(value.equals("P") ? R.drawable.bead_road_item_color_blue : R.drawable.bead_road_item_color_red);
 
+
                 }
 
 
@@ -406,9 +418,10 @@ public class FragmentMain extends Fragment {
             }
         }
 
-        validateResultBaseOnBrain(listOfItemFromRoad);
 
-        countThePlayerBanker(listOfItemFromRoad);
+        validateResultBaseOnBrain();
+        countThePlayerBanker(list);
+
     }
 
     private static int countWordsStartingWith(List<String> stringList, String input) {
@@ -433,11 +446,11 @@ public class FragmentMain extends Fragment {
         txtbankerHandCount.setText(String.valueOf(countWordsStartingWith(listOfItemFromRoad, "B")));
     }
 
-    private void validateResultBaseOnBrain(List<String> list) {
+    private void validateResultBaseOnBrain() {
 
         String currentBrain = MainActivity.getBrainName();
         if (currentBrain.equalsIgnoreCase(Brains.ZIGZAG_STREAK)) {
-            ZigZagBrain(list);
+            ZigZagBrain();
         }
 
 
@@ -461,57 +474,30 @@ public class FragmentMain extends Fragment {
         }
     }
 
-    private void ZigZagBrain(List<String> list) {
+    private void ZigZagBrain() {
 
-        Optional<List<String>> optionalList = Optional.ofNullable(list);
-        if (optionalList.isPresent() && !optionalList.get().isEmpty()) {
+        cardDatabaseHelper.open();
+        List<Card> list = cardDatabaseHelper.getAllCards();
+        cardDatabaseHelper.close();
 
+        trackerPanel.removeAllViews();
 
-            String item = getLastCard(list);
-
-            String status = "";
-            String prediction = getFirstLetterFromString(txtPrediction.getText().toString());
-
-            // -------------Logic of ZigZag---------------------
-            if (item.equalsIgnoreCase(prediction)) {
-                status = "W";
-            } else {
-                status = "L";
-            }
-            //-------------------------------------------------
-            if (!isUndo) {
-//                MainActivity.setTrackerList(status);
-                setTrackerView(status);
-            }
-
-
-//            List<String> trackerList = MainActivity.getTrackerList();
-
-            setPredictionResource(item);
-
-//            trackerPanel.removeAllViews();
-//            for (String t : trackerList) {
-//                setTrackerView(t);
-//            }
-
-//            View firstChild = trackerPanel.getChildAt(0);
-////            // Check if the first child is a TextView
-//            if (firstChild instanceof TextView) {
-//                // Update the text of the TextView
-//                ((TextView) firstChild).setText("*");
-//                ((TextView) firstChild).setBackground(getResources().getDrawable(R.drawable.button_skip));
-//            }
+        for (Card card : list) {
+            System.out.println(card.toString());
+            setPredictionResource(card);
+            setTrackerView(card);
         }
-
     }
 
-    private void setPredictionResource(String item) {
+    private void setPredictionResource(Card card) {
+
+        String cardName = card.getName();
 
         String prediction = "";
-        if (item.equalsIgnoreCase("P")) {
+        if (cardName.equalsIgnoreCase("P")) {
             prediction = "Banker";
             txtPrediction.setBackgroundColor(getResources().getColor(R.color.banker_button));
-        } else if (item.equalsIgnoreCase("B")) {
+        } else if (cardName.equalsIgnoreCase("B")) {
             prediction = "Player";
             txtPrediction.setBackgroundColor(getResources().getColor(R.color.player_button));
         } else {
@@ -519,8 +505,18 @@ public class FragmentMain extends Fragment {
             txtPrediction.setBackgroundColor(getResources().getColor(R.color.wait));
         }
 
+        if (card.getWait().equalsIgnoreCase("Yes")) {
+            txtPrediction.setBackgroundColor(getResources().getColor(R.color.wait));
+        }
+
+        if (cardName.equalsIgnoreCase("Reset")) {
+            prediction = "Wait";
+            txtPrediction.setBackgroundColor(getResources().getColor(R.color.wait));
+        }
 
         txtPrediction.setText(prediction);
+//        }
+
 
     }
 

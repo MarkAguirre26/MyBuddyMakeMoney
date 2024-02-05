@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
     public static ViewPager viewPager;
     public static MyPagerAdapter pagerAdapter;
 
+
     private final String BASE_UNIT = "BaseUnit";
     private static SharedPreferences preferences;
     private static final String PREF_NAME = "your_preference_name";
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         viewPager = findViewById(R.id.viewPager);
 
@@ -81,6 +85,13 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         });
 
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Close the database when the activity is destroyed
+
+    }
+
 
     public static List<String> getCards() {
 
@@ -126,16 +137,16 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
 //    }
 
 
-    public static void setCards(String card) {
-        List<String> cards = getCards();
-        cards.add(card);
-
-        Gson gson = new Gson();
-        String jsonList = gson.toJson(cards);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(CARDS_ELEMENT, jsonList);
-        editor.apply();
-    }
+//    public static void setCards(String card) {
+//        List<String> cards = getCards();
+//        cards.add(card);
+//
+//        Gson gson = new Gson();
+//        String jsonList = gson.toJson(cards);
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString(CARDS_ELEMENT, jsonList);
+//        editor.apply();
+//    }
 
 
     public static void removeLastCard() {
@@ -323,4 +334,6 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
             txt.setText(String.valueOf(unit));
         }
     }
+
+
 }

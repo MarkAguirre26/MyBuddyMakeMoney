@@ -3,7 +3,7 @@
     <!-- Pressed state -->
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="#88048A" /> <!-- Change the color to your desired pressed color -->
+            <solid android:color="#276109" /> <!-- Change the color to your desired pressed color -->
             <stroke
                 android:width="2dp"
                 android:color="#FFFFFF" /> <!-- White stroke around the button -->
