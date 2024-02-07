@@ -22,8 +22,6 @@ public class MoneyManagement {
     private String fieldName;
     private String description;
     private int UnitsRequired;
-
-
     private boolean selected;
 
 
@@ -42,7 +40,7 @@ public class MoneyManagement {
     public MoneyManagement(String fieldName, String description, int unitsRequired, boolean selected) {
         this.fieldName = fieldName;
         this.description = description;
-        UnitsRequired = unitsRequired;
+        this.UnitsRequired = unitsRequired;
         this.selected = selected;
     }
 
@@ -80,5 +78,8 @@ public class MoneyManagement {
 
         return itemList;
     }
+
+
+
 
 }

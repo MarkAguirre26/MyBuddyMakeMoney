@@ -4,7 +4,7 @@
     <!-- Set the border color and width -->
     <stroke
         android:width="3dp"
-        android:color="@color/player_button"/> <!-- Set the border color -->
+        android:color="@color/player"/> <!-- Set the border color -->
 
 
     <solid android:color="#ffffff"/> <!-- Set the background color of the circle -->

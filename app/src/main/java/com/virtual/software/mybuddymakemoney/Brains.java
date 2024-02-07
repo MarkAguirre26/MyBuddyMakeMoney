@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Brains {
-    public static String STAR_BLAZE = "Star Blaze";
-    public static String ONE_TWO_THREE = "One Two Go";
-    public static String CHOP_STREAK = "Chop Streak";
-    public static String ZIGZAG_STREAK = "ZigZag Streak";
+    public static final String STAR_BLAZE = "Star Blaze";
+//    public static final String ONE_TWO_THREE = "One Two Go";
+    public static final String CHOP_STREAK = "Chop Streak";
+    public static  final String ZIGZAG_STREAK = "ZigZag Streak";
 
     private int id;
 
@@ -51,11 +51,13 @@ public class Brains {
     public List<Brains> getBrains() {
         List<Brains> items = new ArrayList<>();
         items.add(new Brains(1, STAR_BLAZE, true));
-        items.add(new Brains(2, ONE_TWO_THREE, false));
-        items.add(new Brains(3, CHOP_STREAK, false));
-        items.add(new Brains(4, ZIGZAG_STREAK, false));
+        items.add(new Brains(2, CHOP_STREAK, false));
+        items.add(new Brains(3, ZIGZAG_STREAK, false));
         return items;
     }
 
 
+
+
 }
+

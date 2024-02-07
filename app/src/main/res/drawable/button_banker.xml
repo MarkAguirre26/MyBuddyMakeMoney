@@ -14,7 +14,7 @@
     <!-- Default state -->
     <item>
         <shape>
-            <solid android:color="@color/banker_button" /> <!-- Change the color to your default color -->
+            <solid android:color="@color/banker" /> <!-- Change the color to your default color -->
             <stroke
                 android:width="3dp"
                 android:color="#FFFFFF" /> <!-- White stroke around the button -->

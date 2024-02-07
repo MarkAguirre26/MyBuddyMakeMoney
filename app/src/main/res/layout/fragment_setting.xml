@@ -16,13 +16,6 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Select Strategy"
-                android:textStyle="bold" />
-
             <ListView
                 android:id="@+id/listViewMoneyManagement"
                 android:layout_width="match_parent"
@@ -34,49 +27,129 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_marginTop="20dp"
-                android:text="Modify your setting"
+                android:text="Unit/Balance"
                 android:textStyle="bold" />
 
 
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Unit Size" />
+
+                    <EditText
+                        android:id="@+id/txtBaseBet"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="decimal"
+                        android:paddingStart="10dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Required Balance" />
+
+                    <EditText
+                        android:id="@+id/txtBuyIn"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="integer"
+                        android:paddingStart="10dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Base Amount" />
+                android:layout_margin="5dp"
+                android:layout_marginTop="20dp"
+                android:text="Stop trigger"
+                android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/txtBaseBet"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/edit_text_style"
-                android:numeric="decimal"
-                android:paddingStart="10dp" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Stop Profit Unit" />
+                android:layout_weight="2"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/txtStopProfitUnit"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/edit_text_style"
-                android:numeric="integer"
-                android:paddingStart="10dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="1dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Stop profit by unit" />
+
+                    <EditText
+                        android:id="@+id/txtStopProfitUnit"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="integer"
+                        android:paddingStart="10dp" />
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Stop Loss Unit" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/txtStopLossUnit"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/edit_text_style"
-                android:numeric="integer"
-                android:paddingStart="10dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Stop loss by unit" />
+
+                    <EditText
+                        android:id="@+id/txtStopLossUnit"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="integer"
+                        android:paddingStart="10dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -86,32 +159,56 @@
                 android:text="Shield"
                 android:textStyle="bold" />
 
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No. of Lose" />
+                android:layout_weight="2"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/txtLossShield"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/edit_text_style"
-                android:numeric="decimal"
-                android:paddingStart="10dp" />
+                <LinearLayout
+                    android:layout_marginEnd="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No. of Win" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No. Lose" />
 
-            <EditText
-                android:id="@+id/txtWinShield"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/edit_text_style"
-                android:numeric="integer"
-                android:paddingStart="10dp" />
+                    <EditText
+                        android:id="@+id/txtLossShield"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="decimal"
+                        android:paddingStart="10dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No. Win" />
+
+                    <EditText
+                        android:id="@+id/txtWinShield"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/edit_text_style"
+                        android:numeric="integer"
+                        android:paddingStart="10dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnSaveSetting"

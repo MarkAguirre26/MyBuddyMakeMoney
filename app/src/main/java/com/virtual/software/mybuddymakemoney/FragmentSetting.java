@@ -36,7 +36,7 @@ public class FragmentSetting extends Fragment {
 
     private SharedPreferences preferences;
     private final String PREF_NAME = "your_preference_name";
-    private final String BASE_UNIT = "BaseUnit";
+    private final String BET_AMOUNT = "BetAmount";
     private final String STOP_LOSS = "StopLoss";
     private final String STOP_PROFIT = "StopProfit";
     private final String SHIELD_LOSE = "ShieldLoss";
@@ -82,20 +82,20 @@ public class FragmentSetting extends Fragment {
         preferences = getContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
 
-        EditText txtBaseBet = view.findViewById(R.id.txtBaseBet);
+        EditText txtBaseBetAmount = view.findViewById(R.id.txtBaseBet);
         EditText txtStopProfitUnit = view.findViewById(R.id.txtStopProfitUnit);
         EditText txtStopLossUnit = view.findViewById(R.id.txtStopLossUnit);
         EditText txtLossShield = view.findViewById(R.id.txtLossShield);
         EditText txtWinShield = view.findViewById(R.id.txtWinShield);
 
 
-        String b = preferences.getString(BASE_UNIT, "0.1");
+        String b = preferences.getString(BET_AMOUNT, "0.1");
         int stopProfit = preferences.getInt(STOP_PROFIT, 0);
         int stopLoss = preferences.getInt(STOP_LOSS, 0);
         int shieldLoss = preferences.getInt(SHIELD_LOSE, 0);
         int shieldWin = preferences.getInt(SHIELD_WIN, 0);
 
-        txtBaseBet.setText(b);
+        txtBaseBetAmount.setText(b);
         txtStopProfitUnit.setText(String.valueOf(stopProfit));
         txtStopLossUnit.setText(String.valueOf(stopLoss));
         txtLossShield.setText(String.valueOf(shieldLoss));
@@ -107,9 +107,9 @@ public class FragmentSetting extends Fragment {
             @Override
             public void onClick(View v) {
 
-                preferences.edit().putString(BASE_UNIT, txtBaseBet.getText().toString()).apply();
+                preferences.edit().putString(BET_AMOUNT, txtBaseBetAmount.getText().toString()).apply();
                 preferences.edit().putInt(STOP_PROFIT, Integer.parseInt(txtStopProfitUnit.getText().toString())).apply();
-                preferences.edit().putInt(STOP_LOSS, Integer.parseInt(txtStopProfitUnit.getText().toString())).apply();
+                preferences.edit().putInt(STOP_LOSS, Integer.parseInt(txtStopLossUnit.getText().toString())).apply();
                 preferences.edit().putInt(SHIELD_LOSE, Integer.parseInt(txtLossShield.getText().toString())).apply();
                 preferences.edit().putInt(SHIELD_WIN, Integer.parseInt(txtWinShield.getText().toString())).apply();
 

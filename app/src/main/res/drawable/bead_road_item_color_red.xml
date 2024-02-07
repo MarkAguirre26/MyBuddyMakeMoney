@@ -7,5 +7,5 @@
 <!--        android:color="@color/banker_button"/> &lt;!&ndash; Set the border color &ndash;&gt;-->
 
 
-    <solid android:color="@color/banker_button"/> <!-- Set the background color of the circle -->
+    <solid android:color="@color/banker"/> <!-- Set the background color of the circle -->
 </shape>
