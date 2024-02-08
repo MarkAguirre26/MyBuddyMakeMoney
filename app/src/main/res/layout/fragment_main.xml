@@ -329,8 +329,8 @@
                             android:orientation="horizontal">
 
                         </LinearLayout>
-<!--                        <include-->
-<!--                            layout="@layout/star_blaze_layout"/>-->
+                        <!--                        <include-->
+                        <!--                            layout="@layout/star_blaze_layout"/>-->
 
                     </HorizontalScrollView>
 
@@ -606,7 +606,7 @@
     <LinearLayout
         android:id="@+id/buttonsPanel"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="85dp"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:padding="5dp"
@@ -631,10 +631,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:background="@drawable/button_player"
+                    android:background="@drawable/player_button_background"
                     android:text="P"
                     android:textColor="@color/white"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
 
@@ -652,11 +652,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:background="@drawable/button_banker"
+                    android:background="@drawable/banker_button_background"
                     android:onClick="btnBanker_Clicked"
                     android:text="B"
                     android:textColor="@color/white"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
             </GridLayout>
 
@@ -672,9 +672,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:background="@drawable/button_skip"
+                    android:background="@drawable/skip_button_background"
                     android:onClick="btnSkip_Clicked"
-                    android:text="S"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="40sp"
                     android:textStyle="bold" />
@@ -692,9 +692,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:background="@drawable/button_undo"
+                    android:background="@drawable/undo_button_background"
                     android:onClick="btnUndo_Clicked"
-                    android:text="U"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="40sp"
                     android:textStyle="bold" />
@@ -711,9 +711,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
-                    android:background="@drawable/button_delete"
+                    android:background="@drawable/reset_button_background"
                     android:onClick="btnReset_Clicked"
-                    android:text="R"
+                    android:padding="4dp"
                     android:textColor="@color/white"
                     android:textSize="40sp"
                     android:textStyle="bold" />

@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         setContentView(R.layout.activity_main);
 
 
-
-
         viewPager = findViewById(R.id.viewPager);
 
         txtStrategyName = findViewById(R.id.txtStrategyName);
@@ -85,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         });
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -267,30 +266,42 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
 
 
                 String selectedFragmentName = pagerAdapter.getPageTitle(position).toString();
-                if (selectedFragmentName.equals("FragmentBrains")) {
-                    txtStrategyName.setText("Brains");
-                    txtMoneyManagementName.setText("Select your strategy");
-                } else if (selectedFragmentName.equals("FragmentMain")) {
-                    txtStrategyName.setText(getBrainName());
-                    txtMoneyManagementName.setText(getMoneyManagementName());
 
-                    String baseAmount = preferences.getString(BASE_UNIT, "0.1");
-                    int stopProfit = preferences.getInt(STOP_PROFIT, 0);
-                    int stopLoss = preferences.getInt(STOP_LOSS, 0);
-                    int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
-                    int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
-
-                    onUpdateBaseBetAmount(baseAmount);
-                    onUpdateShield(ShieldLoss, ShieldWin);
-                    onUpdateStopProfit(stopProfit);
-                    onUpdateStopLoss(stopLoss);
-
-                } else if (selectedFragmentName.equals("FragmentSetting")) {
-                    txtStrategyName.setText("Money Management");
-                    txtMoneyManagementName.setText("Modify your preferred setup");
+                switch (selectedFragmentName) {
+                    case "FragmentBrains":
+                        txtStrategyName.setText("Brains");
+                        txtMoneyManagementName.setText("Select your strategy");
 
 
+                        break;
+                    case "FragmentMain":
+
+                        txtStrategyName.setText(getBrainName());
+                        txtMoneyManagementName.setText(getMoneyManagementName());
+
+                        String baseAmount = preferences.getString(BASE_UNIT, "0.1");
+                        int stopProfit = preferences.getInt(STOP_PROFIT, 0);
+                        int stopLoss = preferences.getInt(STOP_LOSS, 0);
+                        int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
+                        int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
+
+                        onUpdateBaseBetAmount(baseAmount);
+                        onUpdateShield(ShieldLoss, ShieldWin);
+                        onUpdateStopProfit(stopProfit);
+                        onUpdateStopLoss(stopLoss);
+                        onResetAll();
+
+
+                        break;
+                    case "FragmentSetting":
+                        txtStrategyName.setText("Money Management");
+                        txtMoneyManagementName.setText("Modify your preferred setup");
+                        break;
+                    default:
+                        // Handle any other cases here
+                        break;
                 }
+
             }
 
             @Override
@@ -333,6 +344,11 @@ public class MainActivity extends AppCompatActivity implements FragmentMain.Upda
         if (txt != null) {
             txt.setText(String.valueOf(unit));
         }
+    }
+
+    @Override
+    public void onResetAll() {
+
     }
 
 
