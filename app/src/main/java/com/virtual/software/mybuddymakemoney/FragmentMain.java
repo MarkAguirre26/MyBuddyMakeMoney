@@ -550,7 +550,7 @@ public class FragmentMain extends Fragment {
                 if (value != null) {
                     textView.setText(value + "\t");
                     textView.setBackgroundResource(value.equals("P") ? R.drawable.bead_road_item_color_blue : R.drawable.bead_road_item_color_red);
-
+                    validateResultBaseOnBrain();
 
                 }
 
@@ -565,7 +565,7 @@ public class FragmentMain extends Fragment {
         }
 
 
-        validateResultBaseOnBrain();
+
         countThePlayerBanker(list);
 
     }
@@ -592,7 +592,9 @@ public class FragmentMain extends Fragment {
         txtbankerHandCount.setText(String.valueOf(countWordsStartingWith(listOfItemFromRoad, "B")));
     }
 
-    private void validateResultBaseOnBrain() {
+    private void validateResultBaseOnBrain(
+
+    ) {
 
         cardDatabaseHelper.open();
         List<Card> list = cardDatabaseHelper.getAllCards();

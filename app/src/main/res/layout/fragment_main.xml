@@ -293,17 +293,17 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="0.5"
                                 android:background="@color/blue_dark"
                                 android:gravity="center"
-                                android:text="Bet Amount"
+                                android:text="Stake"
                                 android:textColor="@color/white" />
 
                             <TextView
                                 android:id="@+id/txtBetAmount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="1.5"
                                 android:background="@color/button_borders"
                                 android:gravity="center"
                                 android:text="0.10"
