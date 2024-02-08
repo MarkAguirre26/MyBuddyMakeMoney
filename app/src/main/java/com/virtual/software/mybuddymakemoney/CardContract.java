@@ -13,6 +13,7 @@ public class CardContract {
         public static final String COLUMN_PREDICTION = "prediction";
         public static final String COLUMN_BRAIN = "brain";
         public static final String COLUMN_INITIALIZE = "Initialize";
+        public static final String COLUMN_SKIP = "skip";
         public static final String COLUMN_WAIT = "wait";
     }
 }

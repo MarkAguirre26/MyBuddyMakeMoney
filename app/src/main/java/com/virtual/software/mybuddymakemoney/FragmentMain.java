@@ -229,7 +229,7 @@ public class FragmentMain extends Fragment {
 
 
                 //this is to reset the view
-                ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset"));
+                ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset","Reset"));
                 //then re establish
 
                 // Example usage: Deleting the last row (assuming there's at least one row in the database)
@@ -281,7 +281,7 @@ public class FragmentMain extends Fragment {
         txtProfit.setBackgroundColor(getContext().getColor(R.color.white));
 
         setBeadRoadView(6, 20, 50);
-        ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset"));
+        ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset","Yes"));
     }
 
     private void saveCardItem(String cardItem) {
@@ -296,14 +296,22 @@ public class FragmentMain extends Fragment {
         if (selectedBrain == null || selectedBrain.isEmpty()) {
             System.out.println("selectedBrain is null or empty. No brain applied.");
         } else {
+
+            String isSkip = txtSkip.getText().toString();
+            String isWait = txtPrediction.getText().toString();
+
+            isSkip = isSkip.equalsIgnoreCase("Yes") ? "Yes" : "No";
+            isWait = isWait.equalsIgnoreCase("Wait") ? "Yes" : "No";
+
+
             switch (selectedBrain) {
                 case Brains.ZIGZAG_STREAK:
 
                     cardDatabaseHelper.open();
                     if (count == 0) {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes"));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes","Yes"));
                     } else {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", txtSkip.getText().toString()));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", isSkip,isWait));
                     }
                     cardDatabaseHelper.close();
 
@@ -313,18 +321,15 @@ public class FragmentMain extends Fragment {
 
                     cardDatabaseHelper.open();
                     if (count < 3) {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes"));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes","Yes"));
                     } else {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", txtSkip.getText().toString()));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No",isSkip,isWait));
                     }
                     cardDatabaseHelper.close();
 
                     break;
 
                 default:
-                    // Handle the case where selectedBrain doesn't match any known type
-                    // Add appropriate error handling or default behavior
-                    // For now, let's assume you want to log an error message
                     System.out.println("Unknown Brain type '" + selectedBrain + "'. No Brain applied.");
                     break;
             }
@@ -356,7 +361,9 @@ public class FragmentMain extends Fragment {
         String cardName = card.getName();
         String prediction = card.getPrediction();
         String isInitialize = card.getInitialize();
+        String isSkip = card.getSkip();
         String isWait = card.getWait();
+        System.out.println("getTrackerView:"+ card.toString());
 
 
         TextView textView = new TextView(getContext());
@@ -365,40 +372,56 @@ public class FragmentMain extends Fragment {
                 60);
         layoutParams.setMargins(1, 1, 1, 1);
         textView.setLayoutParams(layoutParams);
+        textView.setGravity(android.view.Gravity.CENTER);
+        textView.setTextColor(getResources().getColor(R.color.white)); // Replace with your color resource
+        textView.setTypeface(null, android.graphics.Typeface.BOLD);
+
 
         if (!isInitialize.equalsIgnoreCase("Yes")) {
-            if (cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isWait.equalsIgnoreCase("No")) {
+
+            if (cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isWait.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("No")) {
 
                 textView.setText("W");
                 textView.setBackground(getResources().getDrawable(R.drawable.win));
                 result = "W";
 
-
-            } else if (!cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isWait.equalsIgnoreCase("No")) {
+            } else if (!cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isWait.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("No")) {
                 textView.setText("L");
                 textView.setBackground(getResources().getDrawable(R.drawable.button_banker));
                 result = "L";
 
+            }else if (cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("Yes")) {
+
+                textView.setText("W");
+                textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
+                result = "W";
+                System.out.println("here1");
+                setSkip(false);
+            } else if (!cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("Yes")) {
+                textView.setText("L");
+                textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
+                result = "L";
+                setSkip(false);
+                System.out.println("here2");
             }
 
             if (isWait.equalsIgnoreCase("Yes")) {
-                textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
-                setSkip(false);
+                textView.setText("*");
+                textView.setBackground(getResources().getDrawable(R.drawable.button_player));
+                System.out.println("here3");
             }
 
 
         } else {
 
             textView.setText("*");
-            textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
+            textView.setBackground(getResources().getDrawable(R.drawable.button_player));
         }
 
 
-        textView.setGravity(android.view.Gravity.CENTER);
-        textView.setTextColor(getResources().getColor(R.color.white)); // Replace with your color resource
-        textView.setTypeface(null, android.graphics.Typeface.BOLD);
 
         trackerPanel.addView(textView);
+
         scrollToEnd();
         return result;
     }
@@ -592,9 +615,7 @@ public class FragmentMain extends Fragment {
         txtbankerHandCount.setText(String.valueOf(countWordsStartingWith(listOfItemFromRoad, "B")));
     }
 
-    private void validateResultBaseOnBrain(
-
-    ) {
+    private void validateResultBaseOnBrain() {
 
         cardDatabaseHelper.open();
         List<Card> list = cardDatabaseHelper.getAllCards();
@@ -673,26 +694,18 @@ public class FragmentMain extends Fragment {
 
     private void ChopStreak(List<Card> list) {
 
-        List<String> nameList = new ArrayList<>();
-        for (Card c : list) {
-            nameList.add(c.getName());
+        trackerPanel.removeAllViews();
+        for (Card card : list) {
+
+            ProcessChopStreak(list);
+            String r = getTrackerView(card);
+//            OscarsGrind(r);
+
+
         }
 
-        //Note: Do not move these code to any line
-        String outcome = "";
-        if (list.size() >= 3) {
 
-            // Get the last 3 items
-            List<String> lastThreeItems = getLastNItems(nameList, 3);
 
-            String pattern = lastThreeItems.stream()
-                    .skip(Math.max(0, lastThreeItems.size() - 3))
-                    .collect(Collectors.joining(""));
-
-            outcome = ChopStreak.patternMap.getOrDefault(pattern, "Wait");
-            generateResult(outcome);
-
-      }
 
     }
 
@@ -721,6 +734,7 @@ public class FragmentMain extends Fragment {
         betsList.clear();
         winLoseList.clear();
         trackerPanel.removeAllViews();
+
         for (Card card : list) {
 
             ProcessZigZagBrainLogic(card);
@@ -961,6 +975,34 @@ public class FragmentMain extends Fragment {
 
         }
     }
+
+
+    private void ProcessChopStreak(List<Card> list){
+
+
+        List<String> nameList = list.stream()
+                .map(Card::getName)
+                .collect(Collectors.toList());
+
+
+        //Note: Do not move these code to any line
+        String outcome = "";
+        if (list.size() >= 3) {
+
+            // Get the last 3 items
+            List<String> lastThreeItems = getLastNItems(nameList, 3);
+
+            String pattern = lastThreeItems.stream()
+                    .skip(Math.max(0, lastThreeItems.size() - 3))
+                    .collect(Collectors.joining(""));
+
+            outcome = ChopStreak.patternMap.getOrDefault(pattern, "Wait");
+            generateResult(outcome);
+
+        }
+
+    }
+
     private TextView createTextView(int size) {
         TextView textView = new TextView(getContext());
         TableRow.LayoutParams params = new TableRow.LayoutParams(60, 60);

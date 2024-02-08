@@ -31,6 +31,7 @@ public class CardDataSource {
         values.put(CardContract.CardEntry.COLUMN_PREDICTION, card.getPrediction());
         values.put(CardContract.CardEntry.COLUMN_BRAIN, card.getBrain());
         values.put(CardContract.CardEntry.COLUMN_INITIALIZE, card.getInitialize());
+        values.put(CardContract.CardEntry.COLUMN_SKIP, card.getSkip());
         values.put(CardContract.CardEntry.COLUMN_WAIT, card.getWait());
 
         return database.insert(CardContract.CardEntry.TABLE_NAME, null, values);
@@ -98,9 +99,10 @@ public class CardDataSource {
                 String prediction = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.COLUMN_PREDICTION));
                 String brain = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.COLUMN_BRAIN));
                 String Initialize = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.COLUMN_INITIALIZE));
+                String skip = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.COLUMN_SKIP));
                 String wait = cursor.getString(cursor.getColumnIndex(CardContract.CardEntry.COLUMN_WAIT));
 
-                Card card = new Card(id, name, prediction, brain, Initialize, wait);
+                Card card = new Card(id, name, prediction, brain, Initialize,skip, wait);
                 cardList.add(card);
 
                 cursor.moveToNext();

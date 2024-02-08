@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class CardDbHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "carddb.db";
+    private static final String DATABASE_NAME = "cardData.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String SQL_CREATE_ENTRIES =
@@ -15,6 +15,7 @@ public class CardDbHelper extends SQLiteOpenHelper {
                     CardContract.CardEntry.COLUMN_PREDICTION + " TEXT," +
                     CardContract.CardEntry.COLUMN_BRAIN + " TEXT," +
                     CardContract.CardEntry.COLUMN_INITIALIZE + " TEXT," +
+                    CardContract.CardEntry.COLUMN_SKIP + " TEXT," +
                     CardContract.CardEntry.COLUMN_WAIT + " TEXT)";
 
     private static final String SQL_DELETE_ENTRIES =

@@ -5,16 +5,27 @@ public class Card {
     private String prediction;
     private String brain;
     private String Initialize;
+    private String skip;
+
+
     private String wait;
 
-    // Constructor
-    public Card(int id, String name, String prediction, String brain,String Initialize, String wait) {
+    public Card(int id, String name, String prediction, String brain, String initialize, String skip, String wait) {
         this.id = id;
         this.name = name;
         this.prediction = prediction;
         this.brain = brain;
-        this.Initialize = Initialize;
+        Initialize = initialize;
+        this.skip = skip;
         this.wait = wait;
+    }
+
+    public String getSkip() {
+        return skip;
+    }
+
+    public void setSkip(String skip) {
+        this.skip = skip;
     }
 
     public String getInitialize() {
@@ -51,8 +62,6 @@ public class Card {
         this.name = name;
     }
 
-
-
     @Override
     public String toString() {
         return "Card{" +
@@ -60,9 +69,12 @@ public class Card {
                 ", name='" + name + '\'' +
                 ", prediction='" + prediction + '\'' +
                 ", brain='" + brain + '\'' +
+                ", Initialize='" + Initialize + '\'' +
+                ", skip='" + skip + '\'' +
                 ", wait='" + wait + '\'' +
                 '}';
     }
 
-    // Additional methods can be added as needed
+
+// Additional methods can be added as needed
 }
