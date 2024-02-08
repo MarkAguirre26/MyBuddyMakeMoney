@@ -2,6 +2,7 @@ package com.virtual.software.mybuddymakemoney;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -223,22 +224,29 @@ public class FragmentMain extends Fragment {
                 isUndo = true;
                 playClickedSound();
 
-                cardDatabaseHelper.open();
+//                cardDatabaseHelper.open();
                 List<Card> allCards = cardDatabaseHelper.getAllCards();
-                cardDatabaseHelper.close();
+//                cardDatabaseHelper.close();
 
 
                 //this is to reset the view
-                ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset","Reset"));
+                ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset", "Reset"));
                 //then re establish
 
                 // Example usage: Deleting the last row (assuming there's at least one row in the database)
                 if (!allCards.isEmpty()) {
                     Card lastCard = allCards.get(allCards.size() - 1);
-                    cardDatabaseHelper.open();
+//                    cardDatabaseHelper.open();
                     cardDatabaseHelper.deleteCard(lastCard.getId());
-                    cardDatabaseHelper.close();
+//                    cardDatabaseHelper.close();
 
+// Get the index of the last child view
+                    int lastIndex = trackerPanel.getChildCount() - 1;
+
+                    if (lastIndex >= 0) {
+                        // Remove the last child view
+                        trackerPanel.removeViewAt(lastIndex);
+                    }
 
                 } else {
                     ResetAll();
@@ -263,9 +271,9 @@ public class FragmentMain extends Fragment {
         betsList = new ArrayList<>();
         winLoseList = new ArrayList<>();
 
-        cardDatabaseHelper.open();
+//        cardDatabaseHelper.open();
         cardDatabaseHelper.deleteAllCards();
-        cardDatabaseHelper.close();
+//        cardDatabaseHelper.close();
 
 
         betsList.clear();
@@ -281,14 +289,14 @@ public class FragmentMain extends Fragment {
         txtProfit.setBackgroundColor(getContext().getColor(R.color.white));
 
         setBeadRoadView(6, 20, 50);
-        ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset","Yes"));
+        ProcessZigZagBrainLogic(new Card(0, "Reset", "Reset", "Reset", "Reset", "Reset", "Yes"));
     }
 
     private void saveCardItem(String cardItem) {
 
-        cardDatabaseHelper.open();
+//        cardDatabaseHelper.open();
         int count = cardDatabaseHelper.getAllCardNames().size();
-        cardDatabaseHelper.close();
+//        cardDatabaseHelper.close();
 //-------------------------------------------------------------------
 
 
@@ -307,25 +315,25 @@ public class FragmentMain extends Fragment {
             switch (selectedBrain) {
                 case Brains.ZIGZAG_STREAK:
 
-                    cardDatabaseHelper.open();
+//                    cardDatabaseHelper.open();
                     if (count == 0) {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes","Yes"));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes", "Yes"));
                     } else {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", isSkip,isWait));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", isSkip, isWait));
                     }
-                    cardDatabaseHelper.close();
+//                    cardDatabaseHelper.close();
 
                     break;
                 case Brains.CHOP_STREAK:
                 case Brains.STAR_BLAZE:
 
-                    cardDatabaseHelper.open();
+//                    cardDatabaseHelper.open();
                     if (count < 3) {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes","Yes"));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "Yes", "Yes", "Yes"));
                     } else {
-                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No",isSkip,isWait));
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), MainActivity.getBrainName(), "No", isSkip, isWait));
                     }
-                    cardDatabaseHelper.close();
+//                    cardDatabaseHelper.close();
 
                     break;
 
@@ -334,8 +342,6 @@ public class FragmentMain extends Fragment {
                     break;
             }
         }
-
-
 
 
 //-------------------------------------------------------------------
@@ -363,18 +369,18 @@ public class FragmentMain extends Fragment {
         String isInitialize = card.getInitialize();
         String isSkip = card.getSkip();
         String isWait = card.getWait();
-        System.out.println("getTrackerView:"+ card.toString());
+
 
 
         TextView textView = new TextView(getContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                60, // width
-                60);
+                50, // width
+                50);
         layoutParams.setMargins(1, 1, 1, 1);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(android.view.Gravity.CENTER);
         textView.setTextColor(getResources().getColor(R.color.white)); // Replace with your color resource
-        textView.setTypeface(null, android.graphics.Typeface.BOLD);
+//        textView.setTypeface(null, Typeface.NORMAL);
 
 
         if (!isInitialize.equalsIgnoreCase("Yes")) {
@@ -390,7 +396,7 @@ public class FragmentMain extends Fragment {
                 textView.setBackground(getResources().getDrawable(R.drawable.button_banker));
                 result = "L";
 
-            }else if (cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("Yes")) {
+            } else if (cardName.equalsIgnoreCase(prediction) && isInitialize.equalsIgnoreCase("No") && isSkip.equalsIgnoreCase("Yes")) {
 
                 textView.setText("W");
                 textView.setBackground(getResources().getDrawable(R.drawable.button_skip));
@@ -417,7 +423,6 @@ public class FragmentMain extends Fragment {
             textView.setText("*");
             textView.setBackground(getResources().getDrawable(R.drawable.button_player));
         }
-
 
 
         trackerPanel.addView(textView);
@@ -535,9 +540,9 @@ public class FragmentMain extends Fragment {
     public void setBeadRoadView(int numRows, int numColumns, int textViewSize) {
 
 
-        cardDatabaseHelper.open();
+//        cardDatabaseHelper.open();
         List<String> list = cardDatabaseHelper.getAllCardNames();
-        cardDatabaseHelper.close();
+//        cardDatabaseHelper.close();
 
         String[][] table = new String[numRows][numColumns];
         fillTable(table, list);
@@ -546,6 +551,7 @@ public class FragmentMain extends Fragment {
         if (tableLayout.getChildCount() != numRows) {
             tableLayout.removeAllViews(); // Only remove views if needed
         }
+
 
         for (int i = 0; i < numRows; i++) {
             TableRow tableRow;
@@ -573,7 +579,7 @@ public class FragmentMain extends Fragment {
                 if (value != null) {
                     textView.setText(value + "\t");
                     textView.setBackgroundResource(value.equals("P") ? R.drawable.bead_road_item_color_blue : R.drawable.bead_road_item_color_red);
-                    validateResultBaseOnBrain();
+
 
                 }
 
@@ -585,10 +591,9 @@ public class FragmentMain extends Fragment {
             if (i >= tableLayout.getChildCount()) {
                 tableLayout.addView(tableRow);
             }
+
         }
-
-
-
+        validateResultBaseOnBrain();
         countThePlayerBanker(list);
 
     }
@@ -617,9 +622,10 @@ public class FragmentMain extends Fragment {
 
     private void validateResultBaseOnBrain() {
 
-        cardDatabaseHelper.open();
+//        cardDatabaseHelper.open();
         List<Card> list = cardDatabaseHelper.getAllCards();
-        cardDatabaseHelper.close();
+//        cardDatabaseHelper.close();
+
 
         String selectedBrain = MainActivity.getBrainName();
         if (selectedBrain == null || selectedBrain.isEmpty()) {
@@ -646,13 +652,14 @@ public class FragmentMain extends Fragment {
 
 
     }
+
     private void generateResult(String input) {
 
         String result;
         if (input.equals("P")) {
             result = "Player";
-          txtPrediction.setText(result);
-          txtPrediction.setBackgroundColor(getContext().getColor(R.color.player));
+            txtPrediction.setText(result);
+            txtPrediction.setBackgroundColor(getContext().getColor(R.color.player));
         } else if (input.equals("B")) {
             result = "Banker";
             txtPrediction.setText(result);
@@ -672,21 +679,26 @@ public class FragmentMain extends Fragment {
 
         return lastFiveItems;
     }
+
     private void StarBlaze(List<Card> list) {
 
 
-        betsList.clear();
-        winLoseList.clear();
-        trackerPanel.removeAllViews();
+//        betsList.clear();
+//        winLoseList.clear();
+//        trackerPanel.removeAllViews();
 
-        for (Card card : list) {
+        Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
+        if (lastItem != null) {
             ProcessStarBlazeBrainLogic(list);
-            getTrackerView(card);
+            if(!isUndo){
+                getTrackerView(lastItem);
+            }
+
         }
-
-
-
-
+//        for (Card card : list) {
+//            ProcessStarBlazeBrainLogic(list);
+//            getTrackerView(lastItem);
+//        }
 
 
     }
@@ -694,17 +706,17 @@ public class FragmentMain extends Fragment {
 
     private void ChopStreak(List<Card> list) {
 
-        trackerPanel.removeAllViews();
-        for (Card card : list) {
-
-            ProcessChopStreak(list);
-            String r = getTrackerView(card);
+//        trackerPanel.removeAllViews();
+//        for (Card card : list) {
+        Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
+        ProcessChopStreak(list);
+        if(!isUndo){
+            getTrackerView(lastItem);
+        }
 //            OscarsGrind(r);
 
 
-        }
-
-
+//        }
 
 
     }
@@ -728,21 +740,23 @@ public class FragmentMain extends Fragment {
         }
     }
 
+
     private void ZigZagBrain(List<Card> list) {
 
+//        betsList.clear();
+//        winLoseList.clear();
+//        trackerPanel.removeAllViews();
 
-        betsList.clear();
-        winLoseList.clear();
-        trackerPanel.removeAllViews();
-
-        for (Card card : list) {
-
-            ProcessZigZagBrainLogic(card);
-            String r = getTrackerView(card);
-            OscarsGrind(r);
-
-
+//        for (Card card : list) {
+        Card card = list.stream().reduce((first, second) -> second).orElse(null);
+        ProcessZigZagBrainLogic(card);
+        if(!isUndo){
+            getTrackerView(card);
         }
+
+
+
+//        }
 
 
     }
@@ -793,7 +807,7 @@ public class FragmentMain extends Fragment {
 
         winLoseList.add(r);
         String lastResult = getLastString(winLoseList);
-        System.out.println("lastResult: "+lastResult);
+        System.out.println("lastResult: " + lastResult);
 
         if (lastResult.equalsIgnoreCase("W")) {
 
@@ -953,7 +967,7 @@ public class FragmentMain extends Fragment {
             outcome = StarBlaze.patternMap.getOrDefault(pattern, "Invalid pattern");
             generateResult(outcome);
 
-        }else if (list.size() == 4) {
+        } else if (list.size() == 4) {
 
             // Get the last 5 items
             List<String> lastFiveItems = getLastNItems(nameList, 4);
@@ -977,7 +991,7 @@ public class FragmentMain extends Fragment {
     }
 
 
-    private void ProcessChopStreak(List<Card> list){
+    private void ProcessChopStreak(List<Card> list) {
 
 
         List<String> nameList = list.stream()

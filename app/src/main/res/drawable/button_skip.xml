@@ -5,9 +5,9 @@
         <shape>
             <solid android:color="#CD8C0D" /> <!-- Change the color to your desired pressed color -->
             <stroke
-                android:width="2dp"
+                android:width="1dp"
                 android:color="#FFFFFF" /> <!-- White stroke around the button -->
-            <corners android:radius="8dp" /> <!-- Optional: Set corner radius -->
+            <corners android:radius="5dp" /> <!-- Optional: Set corner radius -->
         </shape>
     </item>
 
@@ -16,9 +16,9 @@
         <shape>
             <solid android:color="@color/yellow" /> <!-- Change the color to your default color -->
             <stroke
-                android:width="3dp"
+                android:width="1dp"
                 android:color="#FFFFFF" /> <!-- White stroke around the button -->
-            <corners android:radius="8dp" /> <!-- Optional: Set corner radius -->
+            <corners android:radius="5dp" /> <!-- Optional: Set corner radius -->
         </shape>
     </item>
 </selector>
