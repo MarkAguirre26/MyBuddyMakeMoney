@@ -329,6 +329,9 @@
                             android:orientation="horizontal">
 
                         </LinearLayout>
+<!--                        <include-->
+<!--                            layout="@layout/star_blaze_layout"/>-->
+
                     </HorizontalScrollView>
 
                     <LinearLayout

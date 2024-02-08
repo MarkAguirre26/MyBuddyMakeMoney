@@ -2,7 +2,6 @@ package com.virtual.software.mybuddymakemoney;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -45,7 +44,8 @@ public class FragmentMain extends Fragment {
     List<Double> betsListm;
     List<String> winLoseList;
     boolean isUndo = false;
-    TextView txtTitle, txtHand, txtPlayerHandCount, txtbankerHandCount, txtBetAmount, txtMessage, txtProfit, txtProfitByUnit, txtStopProfit, txtStopLoss;
+    TextView txtPos1,txtBase,txtStep2,txtStep3,txtStep4,txtStep5;
+    TextView txtHand, txtPlayerHandCount, txtbankerHandCount, txtBetAmount, txtMessage, txtProfit, txtProfitByUnit, txtStopProfit, txtStopLoss;
     LinearLayout profitPanelLayout;
     private final String BET_AMOUNT = "BetAmount";
     LinearLayout trackerPanel;
@@ -160,6 +160,7 @@ public class FragmentMain extends Fragment {
         txtStopLoss.setText(String.valueOf(stopLoss));
         txtShield.setText(ShieldLoss + "-" + ShieldWin);
 
+        setMoneyManagementView(view);
 
         AppCompatButton btnPlayer = view.findViewById(R.id.btnPlayer);
         AppCompatButton btnReset = view.findViewById(R.id.btnReset);
@@ -168,7 +169,6 @@ public class FragmentMain extends Fragment {
         AppCompatButton btnUndo = view.findViewById(R.id.btnUndo);
 
         //get the previous data
-
         setBeadRoadView(6, 20, 50);
 
 
@@ -262,6 +262,33 @@ public class FragmentMain extends Fragment {
         });
 
         return view;
+    }
+
+    private void setMoneyManagementView(View view) {
+
+        String currentMoneyManagement = MainActivity.getMoneyManagementName();
+        profitPanelLayout.removeAllViews();
+
+        switch (currentMoneyManagement){
+            case MoneyManagement.ORC:
+
+                LinearLayout layout = (LinearLayout) LayoutInflater.from(getContext())
+                        .inflate(R.layout.orc_layout, null);
+                profitPanelLayout.addView(layout);
+
+                txtPos1 = view.findViewById(R.id.txtPos1);
+                txtBase = view.findViewById(R.id.txtBase);
+                txtStep2 = view.findViewById(R.id.txtStep2);
+                txtStep3 = view.findViewById(R.id.txtStep3);
+                txtStep4 = view.findViewById(R.id.txtStep4);
+                txtStep5 = view.findViewById(R.id.txtStep5);
+
+                break;
+
+            default:
+                break;
+        }
+
     }
 
     private void ResetAll() {
@@ -369,7 +396,6 @@ public class FragmentMain extends Fragment {
         String isInitialize = card.getInitialize();
         String isSkip = card.getSkip();
         String isWait = card.getWait();
-
 
 
         TextView textView = new TextView(getContext());
@@ -690,7 +716,7 @@ public class FragmentMain extends Fragment {
         Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
         if (lastItem != null) {
             ProcessStarBlazeBrainLogic(list);
-            if(!isUndo){
+            if (!isUndo) {
                 getTrackerView(lastItem);
             }
 
@@ -710,7 +736,7 @@ public class FragmentMain extends Fragment {
 //        for (Card card : list) {
         Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
         ProcessChopStreak(list);
-        if(!isUndo){
+        if (!isUndo) {
             getTrackerView(lastItem);
         }
 //            OscarsGrind(r);
@@ -750,10 +776,9 @@ public class FragmentMain extends Fragment {
 //        for (Card card : list) {
         Card card = list.stream().reduce((first, second) -> second).orElse(null);
         ProcessZigZagBrainLogic(card);
-        if(!isUndo){
+        if (!isUndo) {
             getTrackerView(card);
         }
-
 
 
 //        }
