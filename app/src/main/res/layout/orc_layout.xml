@@ -72,48 +72,48 @@
                 android:id="@+id/txtPos1"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/txtBase"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/txtStep2"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/txtStep3"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/txtStep4"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
             <TextView
                 android:id="@+id/txtStep5"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
             <TextView
                 android:id="@+id/txtStep6"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:text="0" />
 
         </TableRow>

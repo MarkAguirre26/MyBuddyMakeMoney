@@ -37,9 +37,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
+
+    int selectBrainFromBrainPage = 0;
+    public Boolean isLoaded = false;
+    private static final String TAG = "MainActivityBackgroundChecker";
+    public BackgroundChecker backgroundChecker;
     MoneyManagementDatabaseHelper moneyManagementDatabaseHelper;
     BrainsDatabaseHelper brainsDatabaseHelper;
-    public static CustomViewPager viewPager;
+    public CustomViewPager viewPager;
     public static MyPagerAdapter pagerAdapter;
     RadioGroup radioGroup, radioGroupBrains;
     private int selectedPageIndex = 0;
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String SHIELD_WIN = "ShieldWin";
     private static final String MM_ID = "MM_ID";
     private int currentMoneyManagementID;
-    TextView txtStrategyName, txtMoneyManagementName;
+    TextView txtBrain, txtMoneyManagementName;
 
     EditText txtBaseBetAmount, txtStopProfitUnit, txtStopLossUnit, txtLossShield, txtWinShield;
     double baseBetAmount;
@@ -109,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         NavBarLinearLayout = findViewById(R.id.NavBarLinearLayout);
 //        NavBarLinearLayout.setVisibility(View.GONE);
 
-        txtStrategyName = findViewById(R.id.txtStrategyName);
+        txtBrain = findViewById(R.id.txtStrategyName);
         txtMoneyManagementName = findViewById(R.id.txtMoneyManagementName);
 
 
@@ -122,168 +127,202 @@ public class MainActivity extends AppCompatActivity {
 
         setTheViewOfBrainAndMoneyManagementHeaderText();
 
+
+//        ---------this is to initialize the components under main layout------------------------------------------------------
+        // Create an instance of BackgroundChecker
+        backgroundChecker = new BackgroundChecker(this);
+        // Start background checking
+        backgroundChecker.startChecking();
+
     }
 
-    private void setTheViewOfBrainAndMoneyManagementHeaderText() {
-        MoneyManagementModel moneyManagementModel = moneyManagementDatabaseHelper.getSelectedItem();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Start background checking if it's not already started
+        if (backgroundChecker != null) {
+            backgroundChecker.startChecking();
+        }
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Stop background checking to conserve resources
+        if (backgroundChecker != null) {
+            backgroundChecker.stopChecking();
+        }
+    }
+
+
+    private void setTheViewOfBrainAndMoneyManagementHeaderText() {
+
+        MoneyManagementModel moneyManagementModel = moneyManagementDatabaseHelper.getSelectedItem();
         if (moneyManagementModel != null) {
             String currentMoneyManagement = moneyManagementModel.getName();
             txtMoneyManagementName.setText(currentMoneyManagement);
         }
 //--------------------------------
         Brains brain = brainsDatabaseHelper.getSelectedItem();
-
         if (brain != null) {
             String currentBrain = brain.getName();
-            txtStrategyName.setText(currentBrain);
+            txtBrain.setText(currentBrain);
+            txtBrain.setTag(brain.getId());
         }
 
 
     }
 
-    private void initializeComponents() {
-
-        cardDatabaseHelper = new CardDataSource(this);
-        betsList = new ArrayList<>();
-        winLoseList = new ArrayList<>();
-        trackerPanel = findViewById(R.id.trackerPanel);
-        trackerPanelHorizontalScroller = findViewById(R.id.trackerPanelHorizontalScroller);
-        tableLayout = findViewById(R.id.tableLayoutBeadRoad);
-        txtPrediction = findViewById(R.id.txtPrediction);
-        txtSkip = findViewById(R.id.txtSkip);
-        txtPlayerHandCount = findViewById(R.id.txtPlayerHandCount);
-        txtbankerHandCount = findViewById(R.id.txtbankerHandCount);
-        txtHand = findViewById(R.id.txtHand);
-        txtBetAmount = findViewById(R.id.txtBetAmount);
-        txtMessage = findViewById(R.id.txtMessage);
-        txtProfit = findViewById(R.id.txtProfit);
-        txtProfitByUnit = findViewById(R.id.txtProfitByUnit);
-        profitPanelLayout = findViewById(R.id.winAndLossLinearLayout);
-        txtStopLoss = findViewById(R.id.txtStopLoss);
-        txtStopProfit = findViewById(R.id.txtStopProfit);
-        txtShield = findViewById(R.id.txtShield);
-        preferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        String BaseUnitAmount = preferences.getString(BET_AMOUNT, "0.1");
-        int stopProfit = preferences.getInt(STOP_PROFIT, 0);
-        int stopLoss = preferences.getInt(STOP_LOSS, 0);
-        int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
-        int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
-
-        txtBetAmount.setText("BaseUnitAmount");
-        currentBetAmount = Double.parseDouble(BaseUnitAmount);
-        txtStopProfit.setText(String.valueOf(stopProfit));
-        txtStopLoss.setText(String.valueOf(stopLoss));
-        txtShield.setText(ShieldLoss + "-" + ShieldWin);
+    public void initializeComponents() {
+        try {
 
 
-        AppCompatButton btnPlayer = findViewById(R.id.btnPlayer);
-        AppCompatButton btnReset = findViewById(R.id.btnReset);
-        AppCompatButton btnBanker = findViewById(R.id.btnBanker);
-        AppCompatButton btnSkip = findViewById(R.id.btnSkip);
-        AppCompatButton btnUndo = findViewById(R.id.btnUndo);
+            isLoaded = true;
+            cardDatabaseHelper = new CardDataSource(this);
+            betsList = new ArrayList<>();
+            winLoseList = new ArrayList<>();
+            trackerPanel = findViewById(R.id.trackerPanel);
+            trackerPanelHorizontalScroller = findViewById(R.id.trackerPanelHorizontalScroller);
+            tableLayout = findViewById(R.id.tableLayoutBeadRoad);
+            txtPrediction = findViewById(R.id.txtPrediction);
+            txtSkip = findViewById(R.id.txtSkip);
+            txtPlayerHandCount = findViewById(R.id.txtPlayerHandCount);
+            txtbankerHandCount = findViewById(R.id.txtbankerHandCount);
+            txtHand = findViewById(R.id.txtHand);
+            txtBetAmount = findViewById(R.id.txtBetAmount);
+            txtMessage = findViewById(R.id.txtMessage);
+            txtProfit = findViewById(R.id.txtProfit);
+            txtProfitByUnit = findViewById(R.id.txtProfitByUnit);
+            profitPanelLayout = findViewById(R.id.winAndLossLinearLayout);
+            txtStopLoss = findViewById(R.id.txtStopLoss);
+            txtStopProfit = findViewById(R.id.txtStopProfit);
+            txtShield = findViewById(R.id.txtShield);
+            preferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            String BaseUnitAmount = preferences.getString(BET_AMOUNT, "0.1");
+            int stopProfit = preferences.getInt(STOP_PROFIT, 0);
+            int stopLoss = preferences.getInt(STOP_LOSS, 0);
+            int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
+            int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
 
-        //get the previous data
-        //  setBeadRoadView(6, 20, 50);
-
-
-        ResetAll();
-
-
-        btnPlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playClickedSound();
-                isUndo = false;
-
-                saveCardItem("P");
-
-
-            }
-        });
-
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playClickedSound();
-                isUndo = false;
-
-                ResetAll();
-
-            }
-        });
+            txtBetAmount.setText("BaseUnitAmount");
+            currentBetAmount = Double.parseDouble(BaseUnitAmount);
+            txtStopProfit.setText(String.valueOf(stopProfit));
+            txtStopLoss.setText(String.valueOf(stopLoss));
+            txtShield.setText(ShieldLoss + "-" + ShieldWin);
 
 
-        btnBanker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            AppCompatButton btnPlayer = findViewById(R.id.btnPlayer);
+            AppCompatButton btnReset = findViewById(R.id.btnReset);
+            AppCompatButton btnBanker = findViewById(R.id.btnBanker);
+            AppCompatButton btnSkip = findViewById(R.id.btnSkip);
+            AppCompatButton btnUndo = findViewById(R.id.btnUndo);
 
-                playClickedSound();
-                isUndo = false;
-                saveCardItem("B");
-
-
-            }
-        });
+            //get the previous data
+            //  setBeadRoadView(6, 20, 50);
 
 
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                setSkip(true);
-                isUndo = false;
-                playClickedSound();
+            ResetAll();
 
-                if (!txtSkip.getText().toString().equalsIgnoreCase("Yes")) {
-                    setSkip(true);
-                } else {
-                    setSkip(false);
+
+            btnPlayer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playClickedSound();
+                    isUndo = false;
+
+                    saveCardItem("P");
+
+
                 }
-            }
-        });
+            });
 
-        btnUndo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            btnReset.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    playClickedSound();
+                    isUndo = false;
 
-                isUndo = true;
+                    ResetAll();
 
-                playClickedSound();
-                List<Card> allCards = cardDatabaseHelper.getAllCards();
+                }
+            });
 
 
-                if (!allCards.isEmpty()) {
-                    Card lastCard = allCards.get(allCards.size() - 1);
-                    cardDatabaseHelper.deleteCard(lastCard.getId());
+            btnBanker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    playClickedSound();
+                    isUndo = false;
+                    saveCardItem("B");
+
+
+                }
+            });
+
+
+            btnSkip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                setSkip(true);
+                    isUndo = false;
+                    playClickedSound();
+
+                    if (!txtSkip.getText().toString().equalsIgnoreCase("Yes")) {
+                        setSkip(true);
+                    } else {
+                        setSkip(false);
+                    }
+                }
+            });
+
+            btnUndo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    isUndo = true;
+
+                    playClickedSound();
+                    List<Card> allCards = cardDatabaseHelper.getAllCards();
+
+
+                    if (!allCards.isEmpty()) {
+                        Card lastCard = allCards.get(allCards.size() - 1);
+                        cardDatabaseHelper.deleteCard(lastCard.getId());
 // Get the index of the last child view
-                    int lastIndex = trackerPanel.getChildCount() - 1;
+                        int lastIndex = trackerPanel.getChildCount() - 1;
 
-                    if (lastIndex >= 0) {
-                        // Remove the last child view
-                        trackerPanel.removeViewAt(lastIndex);
+                        if (lastIndex >= 0) {
+                            // Remove the last child view
+                            trackerPanel.removeViewAt(lastIndex);
+                        }
+
+                    } else {
+                        ResetAll();
                     }
 
-                } else {
-                    ResetAll();
-                }
+                    try {
+                        setBeadRoadView(6, 20, 20);
+                    } catch (Exception exception) {
 
-                try {
-                    setBeadRoadView(6, 20, 20);
-                } catch (Exception exception) {
+                    }
 
                 }
-
-
-            }
-        });
+            });
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Close the database when the activity is destroyed
-
+        // Release resources when the activity is destroyed
+        if (backgroundChecker != null) {
+            backgroundChecker.stopChecking();
+            backgroundChecker = null;
+        }
     }
 
 
@@ -401,7 +440,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-        Toast.makeText(getApplicationContext(), "Exit", Toast.LENGTH_SHORT).show();
+
     }
 
     private void showAlertForChangingBrain(String b) {
@@ -465,33 +504,32 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (selectedPageIndex) {
                     case 0:
-                        txtStrategyName.setText("Brains");
+                        txtBrain.setText("Brains");
                         txtMoneyManagementName.setText("Select your strategy");
                         GetBrainList();
+
                         break;
                     case 1:
-                        initializeComponents();
-                        setTheViewOfBrainAndMoneyManagementHeaderText();
 
-//                        txtStrategyName.setText(getBrainName());
-//                        txtMoneyManagementName.setText(getMoneyManagementName());
-//                        String baseAmount = preferences.getString(BASE_UNIT, "0.1");
-//                        int stopProfit = preferences.getInt(STOP_PROFIT, 0);
-//                        int stopLoss = preferences.getInt(STOP_LOSS, 0);
-//                        int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
-//                        int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
-//
-//                        txtBase.setText(baseAmount);
-//                        txtStopLoss.setText(String.valueOf(stopProfit));
-//                        txtStopLoss.setText(String.valueOf(stopLoss));
-//                        txtShield.setText(ShieldLoss + "-" + ShieldWin);
+                        if (!isLoaded) {
+                            initializeComponents();
+                        }
+
+                        List<Card> cards = cardDatabaseHelper.getAllCards();
+                        int currentId = Integer.parseInt(txtBrain.getTag().toString());
+
+                        if (!cards.isEmpty() && selectBrainFromBrainPage != currentId) {
+                            confirmDialog(currentId);
+                        } else {
+                            setMoneyManagementView();
+                            setTheViewOfBrainAndMoneyManagementHeaderText();
+                        }
 
 
                         break;
                     case 2:
                         NavBarLinearLayout.setVisibility(View.VISIBLE);
-
-                        txtStrategyName.setText("Money Management");
+                        txtBrain.setText("Money Management");
                         txtMoneyManagementName.setText("Modify your preferred setup");
                         initializeSettingComponents();
                         break;
@@ -639,21 +677,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void confirmDialog(int selectedRadioButtonId, String currentMoneyManagement) {
+    private void confirmDialog(int brainId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to proceed?")
+        builder.setMessage("Seems you want to change the strategy, This will reset to default. Do you want to proceed?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
+//                        updateBrainsListStatus(id);
+                        setTheViewOfBrainAndMoneyManagementHeaderText();
+                        ResetAll();
                         // Handle Yes action
                         dialog.dismiss(); // Dismiss the dialog
-
+//                        viewPager.setCurrentItem(1, true);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+
+                        updateBrainsListStatus(brainId);
+                        setTheViewOfBrainAndMoneyManagementHeaderText();
+
                         // Handle No action
                         dialog.dismiss(); // Dismiss the dialog
-                        viewPager.setCurrentItem(1);
+
                     }
                 });
         AlertDialog dialog = builder.create();
@@ -689,6 +735,9 @@ public class MainActivity extends AppCompatActivity {
                 txtStep4 = findViewById(R.id.txtStep4);
                 txtStep5 = findViewById(R.id.txtStep5);
                 txtStep6 = findViewById(R.id.txtStep6);
+
+                txtBase.setBackgroundColor(getColor(R.color.blue_dark));
+
 
                 break;
             case MoneyManagement.KOI:
@@ -778,8 +827,8 @@ public class MainActivity extends AppCompatActivity {
 //-------------------------------------------------------------------
 
 
-        String selectedBrain = txtStrategyName.getText().toString();
-        if (selectedBrain == null || selectedBrain.isEmpty()) {
+        String selectedBrain = txtBrain.getText().toString();
+        if (selectedBrain.isEmpty()) {
             System.out.println("selectedBrain is null or empty. No brain applied.");
         } else {
 
@@ -807,6 +856,15 @@ public class MainActivity extends AppCompatActivity {
 
 
                     if (count < 3) {
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "Yes", "Yes", "Yes"));
+                    } else {
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "No", isSkip, isWait));
+                    }
+
+
+                    break;
+                case Brains.BODY_GUARD:
+                    if (count < 2) {
                         cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "Yes", "Yes", "Yes"));
                     } else {
                         cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "No", isSkip, isWait));
@@ -1093,7 +1151,7 @@ public class MainActivity extends AppCompatActivity {
 //        cardDatabaseHelper.close();
 
 
-        String selectedBrain = txtStrategyName.getText().toString();
+        String selectedBrain = txtBrain.getText().toString();
         if (selectedBrain == null || selectedBrain.isEmpty()) {
             System.out.println("selectedBrain is null or empty. No brain applied.");
         } else {
@@ -1109,6 +1167,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Brains.TIAMAT:
                     Tiamat(list);
+                    break;
+                case Brains.BODY_GUARD:
+                    BodyGuard(list);
                     break;
                 default:
                     // Handle the case where selectedBrain doesn't match any known type
@@ -1173,30 +1234,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void BodyGuard(List<Card> list) {
+
+        Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
+
+        if (lastItem != null) {
+            ProcessBodyGuard(list);
+            if (!isUndo) {
+                getTrackerView(lastItem);
+            }
+        }
+
+    }
+
 
     private void ChopStreak(List<Card> list) {
 
-//        trackerPanel.removeAllViews();
-//        for (Card card : list) {
+
         Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
         ProcessChopStreak(list);
         if (!isUndo) {
             getTrackerView(lastItem);
         }
-//            OscarsGrind(r);
-
-
-//        }
 
 
     }
 
 
     private String getFirstLetterFromString(String input) {
-//        // Get the first letter using charAt(0)
+
         char firstLetter = input.isEmpty() ? '\0' : input.charAt(0);
         return String.valueOf(firstLetter);
-//        return String.valueOf(input);
+
     }
 
     private static String getLastCard(List<String> stringList) {
@@ -1231,7 +1300,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processMoneyMangement(String r) {
-        String selectedMM = txtStrategyName.getText().toString();
+        String selectedMM = txtBrain.getText().toString();
         if (selectedMM == null || selectedMM.equals("")) {
             System.out.println("selectedMM is null. No money management strategy applied.");
         } else {
@@ -1528,6 +1597,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void ProcessBodyGuard(List<Card> list) {
+
+
+        List<String> nameList = list.stream()
+                .map(Card::getName)
+                .collect(Collectors.toList());
+
+
+        //Note: Do not move these code to any line
+        String outcome = "";
+        if (list.size() >= 2) {
+
+            // Get the last 3 items
+            List<String> lastThreeItems = getLastNItems(nameList, 2);
+
+            String pattern = lastThreeItems.stream()
+                    .skip(Math.max(0, lastThreeItems.size() - 2))
+                    .collect(Collectors.joining(""));
+
+            outcome = BodyGuard.patternMap.getOrDefault(pattern, "Wait");
+            SetPredictionView(outcome);
+
+        }
+
+    }
+
 
     private void ProcessChopStreak(List<Card> list) {
 
@@ -1683,8 +1778,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 RadioButton selectedRadioButton = findViewById(checkedId);
+                selectBrainFromBrainPage = checkedId;
 //                String selectedOption = selectedRadioButton.getText().toString();
-
                 brainsDatabaseHelper.updateAllIsSelected(false);
                 brainsDatabaseHelper.updateIsSelected(checkedId, true);
 
@@ -1703,10 +1798,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addAllBrainsItemsToDaTabase() {
+
         brainsDatabaseHelper.save(new Brains(Brains.STAR_BLAZE, false));
         brainsDatabaseHelper.save(new Brains(Brains.CHOP_STREAK, false));
         brainsDatabaseHelper.save(new Brains(Brains.ZIGZAG_STREAK, false));
         brainsDatabaseHelper.save(new Brains(Brains.TIAMAT, false));
+        brainsDatabaseHelper.save(new Brains(Brains.BODY_GUARD, false));
     }
 
 
@@ -1722,6 +1819,121 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+//    private String OrcMoneyManagement(String response) {
+//
+//
+//        String currentPosition = OrcMoneyManagement.levels[OrcMoneyManagement.BASE];
+//
+//        OrcMoneyManagement.setBetAmount(baseBetAmount);
+//
+//
+//        if (response.equalsIgnoreCase("w")) {
+//            double positiveValue = OrcMoneyManagement.getBetAmount(currentPosition);
+//            betsList.add(positiveValue);
+//        } else {
+//            double negativeValue = convertToNegative(OrcMoneyManagement.getBetAmount(currentPosition));
+//            betsList.add(negativeValue);
+//        }
+//
+//        switch (currentPosition) {
+//            case "Pos1":
+//                if (winLoseCondition(levels[OrcMoneyManagement.POS1], response)) {
+//                    currentPosition = levels[OrcMoneyManagement.BASE];
+//                    consecutiveLose = 0;
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP1];
+//                }
+//                break;
+//
+//            case "Base":
+//                consecutiveWins = 0;
+//                consecutiveLose = 0;
+//                if (winLoseCondition(levels[OrcMoneyManagement.BASE], response)) {
+//                    currentPosition = levels[OrcMoneyManagement.POS1];
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP1];
+//                    consecutiveLose++;
+//                }
+//                break;
+//
+//            case "Step1":
+//                if (winLoseCondition(levels[OrcMoneyManagement.STEP1], response)) {
+//                    currentPosition = levels[OrcMoneyManagement.BASE];
+//                    consecutiveLose = 0;
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP2];
+//                    consecutiveLose++;
+//                }
+//                break;
+//
+//            case "Step2":
+//                if (winLoseCondition(levels[OrcMoneyManagement.STEP2], response)) {
+//                    consecutiveWins++;
+//                    consecutiveLose = 0;
+//                    if (consecutiveWins == winRequirement) {
+//                        currentPosition = levels[OrcMoneyManagement.BASE];
+//                    } else {
+//                        currentPosition = levels[OrcMoneyManagement.STEP1];
+//                    }
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP3];
+//                    consecutiveLose++;
+//                }
+//                break;
+//
+//            case "Step3":
+//                if (winLoseCondition(levels[OrcMoneyManagement.STEP3], response)) {
+//                    consecutiveWins++;
+//                    consecutiveLose = 0;
+//                    if (consecutiveWins == winRequirement) {
+//                        currentPosition = levels[OrcMoneyManagement.BASE];
+//                    } else {
+//                        currentPosition = levels[OrcMoneyManagement.STEP2];
+//                    }
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP4];
+//                    if (consecutiveWins > 0) {
+//                        consecutiveWins--;
+//                    }
+//                    consecutiveLose++;
+//                }
+//                break;
+//
+//            case "Step4":
+//                if (winLoseCondition(levels[OrcMoneyManagement.STEP4], response)) {
+//                    consecutiveWins++;
+//                    consecutiveLose = 0;
+//                    if (consecutiveWins == winRequirement) {
+//                        currentPosition = levels[OrcMoneyManagement.BASE];
+//                    } else {
+//                        currentPosition = levels[OrcMoneyManagement.STEP3];
+//                    }
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.STEP5];
+//                    if (consecutiveWins > 0) {
+//                        consecutiveWins--;
+//                    }
+//                    consecutiveLose++;
+//                }
+//                break;
+//
+//            case "Step5":
+//                if (winLoseCondition(levels[OrcMoneyManagement.STEP5], response)) {
+//                    currentPosition = levels[OrcMoneyManagement.STEP4];
+//                    consecutiveWins++;
+//                    consecutiveLose = 0;
+//                } else {
+//                    currentPosition = levels[OrcMoneyManagement.BASE];
+//                    consecutiveLose++;
+//                }
+//                break;
+//            return currentPosition;
+//        }
+//
+//
+//    }
 
 
 }

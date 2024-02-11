@@ -8,6 +8,7 @@ public class Brains {
     public static final String CHOP_STREAK = "Chop Streak";
     public static  final String ZIGZAG_STREAK = "ZigZag Streak";
     public static  final String TIAMAT = "Tiamat";
+    public static  final String BODY_GUARD = "Body Guard";
 
     private int id;
 

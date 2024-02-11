@@ -13,7 +13,7 @@ import java.util.List;
 public class BrainsDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Name
-    private static final String DATABASE_NAME = "brains_db";
+    private static final String DATABASE_NAME = "brain_db";
 
     // Table Name
     private static final String TABLE_NAME = "brain_table";
