@@ -1,0 +1,64 @@
+package com.virtual.software.mybuddymakemoney;
+
+public class MoneyManagementModel {
+    private int id;
+    private String name;
+    private String description;
+    private boolean isSelected;
+
+    public MoneyManagementModel(){
+
+    }
+    public MoneyManagementModel(String name, String description, boolean isSelected) {
+
+        this.name = name;
+        this.description = description;
+        this.isSelected = isSelected;
+    }
+
+    // Getters and setters
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    // toString method for printing object details
+
+    @Override
+    public String toString() {
+        return "MoneyManagementModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isSelected=" + isSelected +
+                '}';
+    }
+}

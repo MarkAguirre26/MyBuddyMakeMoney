@@ -13,11 +13,14 @@
         android:layout_margin="5dp"
         android:text="Select Strategy" />
 
-    <ListView
-        android:id="@+id/listViewStrategy"
+    <RadioGroup
+        android:id="@+id/radioGroupBrains"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp" />
+        android:layout_height="300dp"
+        android:orientation="vertical">
+
+
+    </RadioGroup>
 
 
 </LinearLayout>

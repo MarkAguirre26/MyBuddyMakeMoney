@@ -1,41 +1,52 @@
 package com.virtual.software.mybuddymakemoney;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-public class MyPagerAdapter extends FragmentPagerAdapter {
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 
-    private String[] fragmentTitles = {"FragmentBrains", "FragmentMain", "FragmentSetting"};
-    private Fragment[] fragments = { new FragmentBrains(), new FragmentMain(),new FragmentSetting()};
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 
-    private String selectedFragmentName;  // Add this variable
+public class MyPagerAdapter extends PagerAdapter {
+        private LayoutInflater layoutInflater;
+        private int[] layouts;
 
-    public MyPagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
-    }
+        public MyPagerAdapter(Context context, int[] layouts) {
+                if (context == null || layouts == null) {
+                        throw new IllegalArgumentException("Context or layouts array cannot be null.");
+                }
+                this.layoutInflater = LayoutInflater.from(context);
+                this.layouts = layouts;
+        }
 
-    @Override
-    public Fragment getItem(int position) {
-        return fragments[position];
-    }
+        @Override
+        public int getCount() {
+                return layouts.length;
+        }
 
-    @Override
-    public int getCount() {
-        return fragments.length;
-    }
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+                return view.equals(object);
+        }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return fragmentTitles[position];
-    }
-    public String getSelectedFragmentName() {
-        return selectedFragmentName;
-    }
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+                View itemView = layoutInflater.inflate(layouts[position], container, false);
+                container.addView(itemView);
+                return itemView;
+        }
 
-    public void setSelectedFragmentName(String name) {
-        selectedFragmentName = name;
-    }
-
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+                container.removeView((View) object);
+        }
 }

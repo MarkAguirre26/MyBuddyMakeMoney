@@ -54,6 +54,12 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="Step 5" />
+            <TextView
+                android:background="@color/blue_dark"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Step 6" />
 
         </TableRow>
 
@@ -99,6 +105,12 @@
 
             <TextView
                 android:id="@+id/txtStep5"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="0" />
+            <TextView
+                android:id="@+id/txtStep6"
                 android:background="@color/white"
                 android:gravity="center"
                 android:padding="10dp"

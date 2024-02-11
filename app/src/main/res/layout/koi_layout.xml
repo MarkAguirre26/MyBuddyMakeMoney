@@ -1,0 +1,374 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- TextViews for Row 1 -->
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 1"
+                    android:textColor="@color/white" />
+
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 2"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 3"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 4"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 5"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 6"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 7"
+                    android:textColor="@color/white" />
+
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 8"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 9"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 10"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 11"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 12"
+                    android:textColor="@color/white" />
+
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 13"
+                    android:textColor="@color/white" />
+
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 14"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 15"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 16"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 17"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 18"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 19"
+                    android:textColor="@color/white" />
+
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 20"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 21"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 22"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 23"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:background="@color/blue_dark"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Step 24"
+                    android:textColor="@color/white" />
+
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- TextViews for Row 2 -->
+                <TextView
+                    android:id="@+id/txtStep1_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep2_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep3_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep4_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep5_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep6_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+                <!-- TextViews for Row 2 -->
+                <TextView
+                    android:id="@+id/txtStep7_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep8_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep9_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep10_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep11_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep12_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep13_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep14_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep15_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep16_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep17_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep18_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep19_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep20_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+
+                <TextView
+                    android:id="@+id/txtStep21_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep22_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/txtStep23_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+                <TextView
+                    android:id="@+id/txtStep24_koi"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="0" />
+            </TableRow>
+
+        </TableLayout>
+
+    </HorizontalScrollView>
+</LinearLayout>
+
