@@ -91,6 +91,36 @@ public class BrainsDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public Brains getFirstItem() {
+        Brains model = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            // Select Query for the first item
+            String selectQuery = "SELECT * FROM " + TABLE_NAME + " LIMIT 1";
+
+            cursor = db.rawQuery(selectQuery, null);
+
+            // Check if cursor has any data
+            if (cursor.moveToFirst()) {
+                model = new Brains();
+                model.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+                model.setName(cursor.getString(cursor.getColumnIndex(COL_NAME)));
+                model.setSelected(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }
+
+        return model;
+    }
+
+
     public List<Brains> getAllSortedByName() {
         List<Brains> models = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -156,7 +186,7 @@ public class BrainsDatabaseHelper extends SQLiteOpenHelper {
                 model = new Brains();
                 model.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
                 model.setName(cursor.getString(cursor.getColumnIndex(COL_NAME)));
-                model.setSelected(cursor.getInt(cursor.getColumnIndex(COL_IS_SELECTED)) == 1);
+                model.setSelected(true);
             }
         } catch (SQLException e) {
             e.printStackTrace();

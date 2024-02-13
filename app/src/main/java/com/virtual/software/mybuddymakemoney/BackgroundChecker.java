@@ -6,7 +6,8 @@ import android.os.Handler;
 public class BackgroundChecker {
     private Handler handler;
     private Runnable runnable;
-    private static final long INTERVAL = 100; // 1 second
+    private static final long INTERVAL = 500; // 1 second
+
     private boolean shouldContinueChecking = true;
     private MainActivity mainActivity;
 
@@ -44,9 +45,17 @@ public class BackgroundChecker {
                 System.out.println("Main layout already loaded...");
                 mainActivity.initializeComponents();
                 mainActivity.ResetAll();
-                mainActivity.backgroundChecker.stopChecking();
-                mainActivity.backgroundChecker = null;
+//                mainActivity.backgroundChecker.stopChecking();
+//                mainActivity.backgroundChecker = null;
 
+            }else{
+                if(mainActivity.isViewPagerSLided){
+                    mainActivity.isViewPagerSLided = false;
+                    System.out.println("isViewPagerSLided:"+mainActivity.isViewPagerSLided);
+                    mainActivity.populateFieldsInMainPage();
+//                    mainActivity.backgroundChecker.stopChecking();
+//                    mainActivity.backgroundChecker = null;
+                }
             }
 
         }

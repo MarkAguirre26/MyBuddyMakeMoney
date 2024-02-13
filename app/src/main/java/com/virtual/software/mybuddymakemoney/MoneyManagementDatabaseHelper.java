@@ -76,6 +76,35 @@ public class MoneyManagementDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public MoneyManagementModel getFirstItem() {
+        MoneyManagementModel model = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            // Select Query to get the first item in the table
+            String selectQuery = "SELECT * FROM " + TABLE_NAME + " LIMIT 1";
+
+            cursor = db.rawQuery(selectQuery, null);
+
+            // Check if cursor has any data
+            if (cursor.moveToFirst()) {
+                model = new MoneyManagementModel();
+                model.setId(cursor.getInt(cursor.getColumnIndex(COL_ID)));
+                model.setName(cursor.getString(cursor.getColumnIndex(COL_NAME)));
+                model.setDescription(cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)));
+                model.setSelected(cursor.getInt(cursor.getColumnIndex(COL_IS_SELECTED)) == 1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
+            db.close();
+        }
+
+        return model;
+    }
 
     private boolean isNameExists(SQLiteDatabase db, String name) {
         Cursor cursor = null;

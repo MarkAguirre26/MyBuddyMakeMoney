@@ -38,8 +38,10 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
+    List<String> winLossListForMoneyManagement = new ArrayList<>();
     int selectBrainFromBrainPage = 0;
     public Boolean isLoaded = false;
+    public Boolean isViewPagerSLided = false;
     private static final String TAG = "MainActivityBackgroundChecker";
     public BackgroundChecker backgroundChecker;
     MoneyManagementDatabaseHelper moneyManagementDatabaseHelper;
@@ -125,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1, true);
         setupViewPager(viewPager);
 
+        if (moneyManagementDatabaseHelper.getFirstItem() == null) {
+            addAllMoneyManagementItemsToDaTabase();
+        }
+
+        if (brainsDatabaseHelper.getFirstItem() == null) {
+            addAllBrainsItemsToDaTabase();
+        }
+
         setTheViewOfBrainAndMoneyManagementHeaderText();
 
 
@@ -161,10 +171,20 @@ public class MainActivity extends AppCompatActivity {
         if (moneyManagementModel != null) {
             String currentMoneyManagement = moneyManagementModel.getName();
             txtMoneyManagementName.setText(currentMoneyManagement);
+        } else {
+            moneyManagementModel = moneyManagementDatabaseHelper.getFirstItem();
+            String currentMoneyManagement = moneyManagementModel.getName();
+            txtMoneyManagementName.setText(currentMoneyManagement);
         }
 //--------------------------------
         Brains brain = brainsDatabaseHelper.getSelectedItem();
         if (brain != null) {
+            String currentBrain = brain.getName();
+            txtBrain.setText(currentBrain);
+            txtBrain.setTag(brain.getId());
+        } else {
+
+            brain = brainsDatabaseHelper.getFirstItem();
             String currentBrain = brain.getName();
             txtBrain.setText(currentBrain);
             txtBrain.setTag(brain.getId());
@@ -174,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initializeComponents() {
-        try {
+//        try {
 
 
             isLoaded = true;
@@ -198,17 +218,9 @@ public class MainActivity extends AppCompatActivity {
             txtStopProfit = findViewById(R.id.txtStopProfit);
             txtShield = findViewById(R.id.txtShield);
             preferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-            String BaseUnitAmount = preferences.getString(BET_AMOUNT, "0.1");
-            int stopProfit = preferences.getInt(STOP_PROFIT, 0);
-            int stopLoss = preferences.getInt(STOP_LOSS, 0);
-            int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
-            int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
 
-            txtBetAmount.setText("BaseUnitAmount");
-            currentBetAmount = Double.parseDouble(BaseUnitAmount);
-            txtStopProfit.setText(String.valueOf(stopProfit));
-            txtStopLoss.setText(String.valueOf(stopLoss));
-            txtShield.setText(ShieldLoss + "-" + ShieldWin);
+
+            populateFieldsInMainPage();
 
 
             AppCompatButton btnPlayer = findViewById(R.id.btnPlayer);
@@ -295,7 +307,11 @@ public class MainActivity extends AppCompatActivity {
                         if (lastIndex >= 0) {
                             // Remove the last child view
                             trackerPanel.removeViewAt(lastIndex);
+
                         }
+
+                        removelastItemFromOrcLevel();
+
 
                     } else {
                         ResetAll();
@@ -309,10 +325,26 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-        } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+//        } catch (Exception ex) {
+//            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
 
+    }
+
+    public void populateFieldsInMainPage() {
+
+        int stopProfit = preferences.getInt(STOP_PROFIT, 0);
+        int stopLoss = preferences.getInt(STOP_LOSS, 0);
+        int ShieldLoss = preferences.getInt(SHIELD_LOSE, 0);
+        int ShieldWin = preferences.getInt(SHIELD_WIN, 0);
+        String b = preferences.getString(BET_AMOUNT, "0.1");
+
+        txtBetAmount.setText(b);
+        currentBetAmount = Double.parseDouble(b);
+        baseBetAmount = currentBetAmount;
+        txtStopProfit.setText(String.valueOf(stopProfit));
+        txtStopLoss.setText(String.valueOf(stopLoss));
+        txtShield.setText(ShieldLoss + "-" + ShieldWin);
     }
 
     @Override
@@ -498,7 +530,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 // The position variable holds the index of the currently selected fragment
-
+                isViewPagerSLided = true;
                 selectedPageIndex = position;
 
 
@@ -560,8 +592,9 @@ public class MainActivity extends AppCompatActivity {
         txtBaseBetAmount = findViewById(R.id.txtBaseBet);
         txtStopProfitUnit = findViewById(R.id.txtStopProfitUnit);
         txtStopLossUnit = findViewById(R.id.txtStopLossUnit);
-        txtLossShield = findViewById(R.id.txtLossShield);
+        txtStopProfitUnit = findViewById(R.id.txtStopProfitUnit);
         txtWinShield = findViewById(R.id.txtWinShield);
+        txtLossShield = findViewById(R.id.txtLossShield);
 
 
         String b = preferences.getString(BET_AMOUNT, "0.1");
@@ -571,6 +604,8 @@ public class MainActivity extends AppCompatActivity {
         int shieldWin = preferences.getInt(SHIELD_WIN, 0);
 
         txtBaseBetAmount.setText(b);
+        baseBetAmount = Double.parseDouble(b);
+
         txtStopProfitUnit.setText(String.valueOf(stopProfit));
         txtStopLossUnit.setText(String.valueOf(stopLoss));
         txtLossShield.setText(String.valueOf(shieldLoss));
@@ -736,8 +771,16 @@ public class MainActivity extends AppCompatActivity {
                 txtStep5 = findViewById(R.id.txtStep5);
                 txtStep6 = findViewById(R.id.txtStep6);
 
-                txtBase.setBackgroundColor(getColor(R.color.blue_dark));
+                OrcMoneyManagement.setBetAmount(baseBetAmount);
 
+                List<BetAmountModel> orcbetAmounts = OrcMoneyManagement.getBetAmountList();
+                txtPos1.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.POS1).amount));
+                txtBase.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.BASE).amount));
+                txtStep2.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP1).amount));
+                txtStep3.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP2).amount));
+                txtStep4.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP3).amount));
+                txtStep5.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP4).amount));
+                txtStep6.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP5).amount));
 
                 break;
             case MoneyManagement.KOI:
@@ -793,6 +836,9 @@ public class MainActivity extends AppCompatActivity {
 
             betsList = new ArrayList<>();
             winLoseList = new ArrayList<>();
+            winLossListForMoneyManagement = new ArrayList<>();
+            orcCurrentLevelList = new ArrayList<>();
+            currentPosition = "Base";
 
             cardDatabaseHelper.deleteAllCards();
 
@@ -810,9 +856,10 @@ public class MainActivity extends AppCompatActivity {
             txtStopLoss.setBackgroundColor(getColor(R.color.white));
             txtProfit.setBackgroundColor(getColor(R.color.white));
 
+
             SetPredictionView("Wait");
             setMoneyManagementView();
-
+            setTheViewOfBrainAndMoneyManagementHeaderText();
 
             setBeadRoadView(6, 20, 50);
         } catch (Exception ex) {
@@ -913,8 +960,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = new TextView(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                50, // width
-                50);
+                50, 50);
         layoutParams.setMargins(1, 1, 1, 1);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(android.view.Gravity.CENTER);
@@ -929,9 +975,19 @@ public class MainActivity extends AppCompatActivity {
                 if (cardName.equalsIgnoreCase(prediction)) {
                     resultText = "W";
                     backgroundResource = isSkip.equalsIgnoreCase("Yes") ? R.drawable.button_skip : R.drawable.win;
+
+                    if (!isSkip.equalsIgnoreCase("Yes")) {
+                        winLossListForMoneyManagement.add(resultText);
+                        processMoneyMangement(resultText);
+                    }
+
                 } else {
                     resultText = "L";
                     backgroundResource = isSkip.equalsIgnoreCase("Yes") ? R.drawable.button_skip : R.drawable.button_banker;
+                    if (!isSkip.equalsIgnoreCase("Yes")) {
+                        winLossListForMoneyManagement.add(resultText);
+                        processMoneyMangement(resultText);
+                    }
                 }
 
                 textView.setText(resultText);
@@ -1146,9 +1202,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void validateResultBaseOnBrain() {
 
-//        cardDatabaseHelper.open();
+
         List<Card> list = cardDatabaseHelper.getAllCards();
-//        cardDatabaseHelper.close();
 
 
         String selectedBrain = txtBrain.getText().toString();
@@ -1218,6 +1273,7 @@ public class MainActivity extends AppCompatActivity {
             if (!isUndo) {
                 getTrackerView(lastItem);
             }
+
         }
 
     }
@@ -1282,11 +1338,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void ZigZagBrain(List<Card> list) {
 
-//        betsList.clear();
-//        winLoseList.clear();
-//        trackerPanel.removeAllViews();
-
-//        for (Card card : list) {
         Card card = list.stream().reduce((first, second) -> second).orElse(null);
         ProcessZigZagBrainLogic(card);
         if (!isUndo) {
@@ -1294,14 +1345,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-//        }
-
-
     }
 
     private void processMoneyMangement(String r) {
-        String selectedMM = txtBrain.getText().toString();
-        if (selectedMM == null || selectedMM.equals("")) {
+
+        String selectedMM = txtMoneyManagementName.getText().toString();
+        if (selectedMM.equals("")) {
             System.out.println("selectedMM is null. No money management strategy applied.");
         } else {
             switch (selectedMM) {
@@ -1309,7 +1358,7 @@ public class MainActivity extends AppCompatActivity {
                     OscarsGrind(r);
                     break;
                 case MoneyManagement.ORC:
-                    // OrcMoneyManagement(r);
+                    OrcMoneyManagement(r);
                     break;
                 case MoneyManagement.MOON:
                     // MoonGrind(r);
@@ -1792,9 +1841,9 @@ public class MainActivity extends AppCompatActivity {
 
         moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.ORC, MoneyManagement.ORC_DESCRIPTION, false));
         moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.OSCAR, MoneyManagement.OSCAR_DESCRIPTION, true));
-        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.MOON, MoneyManagement.MOON_DESCRIPTION, false));
-        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.Mang_B, MoneyManagement.Mang_B_DESCRIPTION, false));
-        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.KOI, MoneyManagement.KOI_DESCRIPTION, false));
+//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.MOON, MoneyManagement.MOON_DESCRIPTION, false));
+//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.Mang_B, MoneyManagement.Mang_B_DESCRIPTION, false));
+//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.KOI, MoneyManagement.KOI_DESCRIPTION, false));
     }
 
     private void addAllBrainsItemsToDaTabase() {
@@ -1803,7 +1852,7 @@ public class MainActivity extends AppCompatActivity {
         brainsDatabaseHelper.save(new Brains(Brains.CHOP_STREAK, false));
         brainsDatabaseHelper.save(new Brains(Brains.ZIGZAG_STREAK, false));
         brainsDatabaseHelper.save(new Brains(Brains.TIAMAT, false));
-        brainsDatabaseHelper.save(new Brains(Brains.BODY_GUARD, false));
+//        brainsDatabaseHelper.save(new Brains(Brains.BODY_GUARD, false));
     }
 
 
@@ -1820,120 +1869,215 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    int winRequirement = 2;
+    String[] levels = OrcMoneyManagement.levels;
+    int consecutiveWins = 0;
+    int consecutiveLose = 0;
 
-//    private String OrcMoneyManagement(String response) {
-//
-//
-//        String currentPosition = OrcMoneyManagement.levels[OrcMoneyManagement.BASE];
-//
-//        OrcMoneyManagement.setBetAmount(baseBetAmount);
-//
-//
-//        if (response.equalsIgnoreCase("w")) {
-//            double positiveValue = OrcMoneyManagement.getBetAmount(currentPosition);
-//            betsList.add(positiveValue);
-//        } else {
-//            double negativeValue = convertToNegative(OrcMoneyManagement.getBetAmount(currentPosition));
-//            betsList.add(negativeValue);
-//        }
-//
-//        switch (currentPosition) {
-//            case "Pos1":
-//                if (winLoseCondition(levels[OrcMoneyManagement.POS1], response)) {
-//                    currentPosition = levels[OrcMoneyManagement.BASE];
-//                    consecutiveLose = 0;
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP1];
-//                }
-//                break;
-//
-//            case "Base":
-//                consecutiveWins = 0;
-//                consecutiveLose = 0;
-//                if (winLoseCondition(levels[OrcMoneyManagement.BASE], response)) {
-//                    currentPosition = levels[OrcMoneyManagement.POS1];
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP1];
-//                    consecutiveLose++;
-//                }
-//                break;
-//
-//            case "Step1":
-//                if (winLoseCondition(levels[OrcMoneyManagement.STEP1], response)) {
-//                    currentPosition = levels[OrcMoneyManagement.BASE];
-//                    consecutiveLose = 0;
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP2];
-//                    consecutiveLose++;
-//                }
-//                break;
-//
-//            case "Step2":
-//                if (winLoseCondition(levels[OrcMoneyManagement.STEP2], response)) {
-//                    consecutiveWins++;
-//                    consecutiveLose = 0;
-//                    if (consecutiveWins == winRequirement) {
-//                        currentPosition = levels[OrcMoneyManagement.BASE];
-//                    } else {
-//                        currentPosition = levels[OrcMoneyManagement.STEP1];
-//                    }
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP3];
-//                    consecutiveLose++;
-//                }
-//                break;
-//
-//            case "Step3":
-//                if (winLoseCondition(levels[OrcMoneyManagement.STEP3], response)) {
-//                    consecutiveWins++;
-//                    consecutiveLose = 0;
-//                    if (consecutiveWins == winRequirement) {
-//                        currentPosition = levels[OrcMoneyManagement.BASE];
-//                    } else {
-//                        currentPosition = levels[OrcMoneyManagement.STEP2];
-//                    }
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP4];
-//                    if (consecutiveWins > 0) {
-//                        consecutiveWins--;
-//                    }
-//                    consecutiveLose++;
-//                }
-//                break;
-//
-//            case "Step4":
-//                if (winLoseCondition(levels[OrcMoneyManagement.STEP4], response)) {
-//                    consecutiveWins++;
-//                    consecutiveLose = 0;
-//                    if (consecutiveWins == winRequirement) {
-//                        currentPosition = levels[OrcMoneyManagement.BASE];
-//                    } else {
-//                        currentPosition = levels[OrcMoneyManagement.STEP3];
-//                    }
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.STEP5];
-//                    if (consecutiveWins > 0) {
-//                        consecutiveWins--;
-//                    }
-//                    consecutiveLose++;
-//                }
-//                break;
-//
-//            case "Step5":
-//                if (winLoseCondition(levels[OrcMoneyManagement.STEP5], response)) {
-//                    currentPosition = levels[OrcMoneyManagement.STEP4];
-//                    consecutiveWins++;
-//                    consecutiveLose = 0;
-//                } else {
-//                    currentPosition = levels[OrcMoneyManagement.BASE];
-//                    consecutiveLose++;
-//                }
-//                break;
-//            return currentPosition;
-//        }
-//
-//
-//    }
+    private static boolean winLoseCondition(String response) {
+        return response.equalsIgnoreCase("W");
+    }
+
+    String currentPosition = "Base";
+
+    private void setStepsHighlight(TextView textView) {
+
+        TextView[] txtviewsArray = {txtPos1, txtBase, txtStep2, txtStep3, txtStep4, txtStep5, txtStep6};
+        for (TextView txt : txtviewsArray) {
+            txt.setBackgroundColor(getColor(R.color.white));
+            txt.setTextColor(getColor(R.color.gray));
+
+
+        }
+        textView.setTextColor(getColor(R.color.white));
+        textView.setBackgroundColor(getColor(R.color.blue_dark));
+
+    }
+
+    List<String> orcCurrentLevelList = new ArrayList<>();
+
+    private void OrcMoneyManagement(String response) {
+
+
+        switch (currentPosition) {
+            case "Pos1":
+                if (winLoseCondition(response)) {
+                    currentPosition = levels[OrcMoneyManagement.BASE];
+                    consecutiveLose = 0;
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP1];
+
+
+                }
+
+                break;
+
+            case "Base":
+                consecutiveWins = 0;
+                consecutiveLose = 0;
+                if (winLoseCondition(response)) {
+                    currentPosition = levels[OrcMoneyManagement.POS1];
+
+
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP1];
+
+
+                    consecutiveLose++;
+                }
+                break;
+
+            case "Step1":
+                if (winLoseCondition(response)) {
+                    currentPosition = levels[OrcMoneyManagement.BASE];
+
+
+                    consecutiveLose = 0;
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP2];
+
+
+                    consecutiveLose++;
+                }
+                break;
+
+            case "Step2":
+                if (winLoseCondition(response)) {
+                    consecutiveWins++;
+                    consecutiveLose = 0;
+                    if (consecutiveWins == winRequirement) {
+                        currentPosition = levels[OrcMoneyManagement.BASE];
+
+
+                    } else {
+                        currentPosition = levels[OrcMoneyManagement.STEP1];
+
+
+                    }
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP3];
+
+                    consecutiveLose++;
+                }
+                break;
+
+            case "Step3":
+                if (winLoseCondition(response)) {
+                    consecutiveWins++;
+                    consecutiveLose = 0;
+                    if (consecutiveWins == winRequirement) {
+                        currentPosition = levels[OrcMoneyManagement.BASE];
+
+
+                    } else {
+                        currentPosition = levels[OrcMoneyManagement.STEP2];
+
+
+                    }
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP4];
+
+
+                    if (consecutiveWins > 0) {
+                        consecutiveWins--;
+                    }
+                    consecutiveLose++;
+                }
+                break;
+
+            case "Step4":
+                if (winLoseCondition(response)) {
+                    consecutiveWins++;
+                    consecutiveLose = 0;
+                    if (consecutiveWins == winRequirement) {
+                        currentPosition = levels[OrcMoneyManagement.BASE];
+
+                    } else {
+                        currentPosition = levels[OrcMoneyManagement.STEP3];
+
+                    }
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.STEP5];
+
+
+                    if (consecutiveWins > 0) {
+                        consecutiveWins--;
+                    }
+                    consecutiveLose++;
+                }
+                break;
+
+            case "Step5":
+                if (winLoseCondition(response)) {
+                    currentPosition = levels[OrcMoneyManagement.STEP4];
+                    consecutiveWins++;
+                    consecutiveLose = 0;
+                } else {
+                    currentPosition = levels[OrcMoneyManagement.BASE];
+                    consecutiveLose++;
+                }
+                break;
+
+        }
+        orcCurrentLevelList.add(currentPosition);
+        setupORCStepsView(orcCurrentLevelList);
+
+
+    }
+
+    private void removelastItemFromOrcLevel() {
+        if (!orcCurrentLevelList.isEmpty()) {
+            orcCurrentLevelList.remove(orcCurrentLevelList.size() - 1);
+            if (!orcCurrentLevelList.isEmpty()) {
+                setupORCStepsView(orcCurrentLevelList);
+            } else {
+                setStepsHighlight(txtBase);
+            }
+        }
+    }
+
+    private void setupORCStepsView(List<String> orcCurrentLevelList) {
+
+        String currentLevel = orcCurrentLevelList.get(orcCurrentLevelList.size() - 1);
+        switch (currentLevel) {
+            case "Pos1":
+                // Remove statements
+                setStepsHighlight(txtPos1);
+                break;
+
+            case "Base":
+                // Remove statements
+                setStepsHighlight(txtBase);
+                break;
+
+            case "Step1":
+                // Remove statements
+                setStepsHighlight(txtStep2);
+                break;
+
+            case "Step2":
+                // Remove statements
+                setStepsHighlight(txtStep3);
+                break;
+
+            case "Step3":
+                // Remove statements
+                setStepsHighlight(txtStep4);
+                break;
+
+            case "Step4":
+                // Remove statements
+                setStepsHighlight(txtStep5);
+                break;
+
+            case "Step5":
+                // Remove statements
+                setStepsHighlight(txtStep6);
+                break;
+        }
+
+
+    }
 
 
 }
