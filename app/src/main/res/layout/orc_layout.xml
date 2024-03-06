@@ -69,7 +69,7 @@
 
             <!-- TextViews for Row 2 -->
             <TextView
-                android:id="@+id/txtPos1"
+                android:id="@+id/txtBaseFlat"
                 android:background="@color/white"
                 android:gravity="center"
                 android:padding="5dp"

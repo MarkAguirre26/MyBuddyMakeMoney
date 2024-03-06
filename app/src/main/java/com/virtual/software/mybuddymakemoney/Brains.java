@@ -1,14 +1,12 @@
 package com.virtual.software.mybuddymakemoney;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Brains {
     public static final String STAR_BLAZE = "Star Blaze";
     public static final String CHOP_STREAK = "Chop Streak";
     public static  final String ZIGZAG_STREAK = "ZigZag Streak";
     public static  final String TIAMAT = "Tiamat";
     public static  final String BODY_GUARD = "Body Guard";
+    public static  final String FOLLOW_TREND = "F-Trend";
 
     private int id;
 

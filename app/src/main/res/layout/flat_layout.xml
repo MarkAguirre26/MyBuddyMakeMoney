@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- TextViews for Row 1 -->
+            <TextView
+                android:background="@color/blue_dark"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Base" />
+
+
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- TextViews for Row 2 -->
+            <TextView
+                android:id="@+id/txtBaseFlat"
+                android:background="@color/white"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="0" />
+
+
+
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>
+

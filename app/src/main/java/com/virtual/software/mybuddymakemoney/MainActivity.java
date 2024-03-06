@@ -21,7 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -84,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
     boolean isUndo = false;
     LinearLayout NavBarLinearLayout;
     TextView txtPos1, txtBase, txtStep2, txtStep3, txtStep4, txtStep5, txtStep6;
+
+    TextView txtBaseFlat;
 
     TextView txtStep1_koi, txtStep2_koi, txtStep3_koi, txtStep4_koi, txtStep5_koi, txtStep6_koi,
             txtStep7_koi, txtStep8_koi, txtStep9_koi, txtStep10_koi, txtStep11_koi, txtStep12_koi,
@@ -197,134 +198,134 @@ public class MainActivity extends AppCompatActivity {
 //        try {
 
 
-            isLoaded = true;
-            cardDatabaseHelper = new CardDataSource(this);
-            betsList = new ArrayList<>();
-            winLoseList = new ArrayList<>();
-            trackerPanel = findViewById(R.id.trackerPanel);
-            trackerPanelHorizontalScroller = findViewById(R.id.trackerPanelHorizontalScroller);
-            tableLayout = findViewById(R.id.tableLayoutBeadRoad);
-            txtPrediction = findViewById(R.id.txtPrediction);
-            txtSkip = findViewById(R.id.txtSkip);
-            txtPlayerHandCount = findViewById(R.id.txtPlayerHandCount);
-            txtbankerHandCount = findViewById(R.id.txtbankerHandCount);
-            txtHand = findViewById(R.id.txtHand);
-            txtBetAmount = findViewById(R.id.txtBetAmount);
-            txtMessage = findViewById(R.id.txtMessage);
-            txtProfit = findViewById(R.id.txtProfit);
-            txtProfitByUnit = findViewById(R.id.txtProfitByUnit);
-            profitPanelLayout = findViewById(R.id.winAndLossLinearLayout);
-            txtStopLoss = findViewById(R.id.txtStopLoss);
-            txtStopProfit = findViewById(R.id.txtStopProfit);
-            txtShield = findViewById(R.id.txtShield);
-            preferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        isLoaded = true;
+        cardDatabaseHelper = new CardDataSource(this);
+        betsList = new ArrayList<>();
+        winLoseList = new ArrayList<>();
+        trackerPanel = findViewById(R.id.trackerPanel);
+        trackerPanelHorizontalScroller = findViewById(R.id.trackerPanelHorizontalScroller);
+        tableLayout = findViewById(R.id.tableLayoutBeadRoad);
+        txtPrediction = findViewById(R.id.txtPrediction);
+        txtSkip = findViewById(R.id.txtSkip);
+        txtPlayerHandCount = findViewById(R.id.txtPlayerHandCount);
+        txtbankerHandCount = findViewById(R.id.txtbankerHandCount);
+        txtHand = findViewById(R.id.txtHand);
+        txtBetAmount = findViewById(R.id.txtBetAmount);
+        txtMessage = findViewById(R.id.txtMessage);
+        txtProfit = findViewById(R.id.txtProfit);
+        txtProfitByUnit = findViewById(R.id.txtProfitByUnit);
+        profitPanelLayout = findViewById(R.id.winAndLossLinearLayout);
+        txtStopLoss = findViewById(R.id.txtStopLoss);
+        txtStopProfit = findViewById(R.id.txtStopProfit);
+        txtShield = findViewById(R.id.txtShield);
+        preferences = this.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
 
-            populateFieldsInMainPage();
+        populateFieldsInMainPage();
 
 
-            AppCompatButton btnPlayer = findViewById(R.id.btnPlayer);
-            AppCompatButton btnReset = findViewById(R.id.btnReset);
-            AppCompatButton btnBanker = findViewById(R.id.btnBanker);
-            AppCompatButton btnSkip = findViewById(R.id.btnSkip);
-            AppCompatButton btnUndo = findViewById(R.id.btnUndo);
+        AppCompatButton btnPlayer = findViewById(R.id.btnPlayer);
+        AppCompatButton btnReset = findViewById(R.id.btnReset);
+        AppCompatButton btnBanker = findViewById(R.id.btnBanker);
+        AppCompatButton btnSkip = findViewById(R.id.btnSkip);
+        AppCompatButton btnUndo = findViewById(R.id.btnUndo);
 
-            //get the previous data
-            //  setBeadRoadView(6, 20, 50);
-
-
-            ResetAll();
+        //get the previous data
+        //  setBeadRoadView(6, 20, 50);
 
 
-            btnPlayer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    playClickedSound();
-                    isUndo = false;
-
-                    saveCardItem("P");
+        ResetAll();
 
 
-                }
-            });
+        btnPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playClickedSound();
+                isUndo = false;
 
-            btnReset.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    playClickedSound();
-                    isUndo = false;
-
-                    ResetAll();
-
-                }
-            });
+                saveCardItem("P");
 
 
-            btnBanker.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            }
+        });
 
-                    playClickedSound();
-                    isUndo = false;
-                    saveCardItem("B");
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playClickedSound();
+                isUndo = false;
+
+                ResetAll();
+
+            }
+        });
 
 
-                }
-            });
+        btnBanker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                playClickedSound();
+                isUndo = false;
+                saveCardItem("B");
 
 
-            btnSkip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            }
+        });
+
+
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                setSkip(true);
-                    isUndo = false;
-                    playClickedSound();
+                isUndo = false;
+                playClickedSound();
 
-                    if (!txtSkip.getText().toString().equalsIgnoreCase("Yes")) {
-                        setSkip(true);
-                    } else {
-                        setSkip(false);
-                    }
+                if (!txtSkip.getText().toString().equalsIgnoreCase("Yes")) {
+                    setSkip(true);
+                } else {
+                    setSkip(false);
                 }
-            });
+            }
+        });
 
-            btnUndo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        btnUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    isUndo = true;
+                isUndo = true;
 
-                    playClickedSound();
-                    List<Card> allCards = cardDatabaseHelper.getAllCards();
+                playClickedSound();
+                List<Card> allCards = cardDatabaseHelper.getAllCards();
 
 
-                    if (!allCards.isEmpty()) {
-                        Card lastCard = allCards.get(allCards.size() - 1);
-                        cardDatabaseHelper.deleteCard(lastCard.getId());
+                if (!allCards.isEmpty()) {
+                    Card lastCard = allCards.get(allCards.size() - 1);
+                    cardDatabaseHelper.deleteCard(lastCard.getId());
 // Get the index of the last child view
-                        int lastIndex = trackerPanel.getChildCount() - 1;
+                    int lastIndex = trackerPanel.getChildCount() - 1;
 
-                        if (lastIndex >= 0) {
-                            // Remove the last child view
-                            trackerPanel.removeViewAt(lastIndex);
-
-                        }
-
-                        removelastItemFromOrcLevel();
-
-
-                    } else {
-                        ResetAll();
-                    }
-
-                    try {
-                        setBeadRoadView(6, 20, 20);
-                    } catch (Exception exception) {
+                    if (lastIndex >= 0) {
+                        // Remove the last child view
+                        trackerPanel.removeViewAt(lastIndex);
 
                     }
+
+                    removelastItemFromOrcLevel();
+
+
+                } else {
+                    ResetAll();
+                }
+
+                try {
+                    setBeadRoadView(6, 20, 20);
+                } catch (Exception exception) {
 
                 }
-            });
+
+            }
+        });
 //        } catch (Exception ex) {
 //            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
 //        }
@@ -345,6 +346,11 @@ public class MainActivity extends AppCompatActivity {
         txtStopProfit.setText(String.valueOf(stopProfit));
         txtStopLoss.setText(String.valueOf(stopLoss));
         txtShield.setText(ShieldLoss + "-" + ShieldWin);
+        try {
+            setMoneyManagementView();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
     }
 
     @Override
@@ -763,7 +769,7 @@ public class MainActivity extends AppCompatActivity {
                         .inflate(R.layout.orc_layout, null);
                 profitPanelLayout.addView(layout_orc);
 
-                txtPos1 = findViewById(R.id.txtPos1);
+                txtPos1 = findViewById(R.id.txtBaseFlat);
                 txtBase = findViewById(R.id.txtBase);
                 txtStep2 = findViewById(R.id.txtStep2);
                 txtStep3 = findViewById(R.id.txtStep3);
@@ -783,45 +789,13 @@ public class MainActivity extends AppCompatActivity {
                 txtStep6.setText(String.valueOf(orcbetAmounts.get(OrcMoneyManagement.STEP5).amount));
 
                 break;
-            case MoneyManagement.KOI:
+            case MoneyManagement.FLAT:
                 LinearLayout layout_koi = (LinearLayout) LayoutInflater.from(this)
-                        .inflate(R.layout.koi_layout, null);
+                        .inflate(R.layout.flat_layout, null);
                 profitPanelLayout.addView(layout_koi);
 
-                txtPos1 = findViewById(R.id.txtPos1);
-                txtBase = findViewById(R.id.txtBase);
-                txtStep2 = findViewById(R.id.txtStep2);
-                txtStep3 = findViewById(R.id.txtStep3);
-                txtStep4 = findViewById(R.id.txtStep4);
-                txtStep5 = findViewById(R.id.txtStep5);
-                txtStep6 = findViewById(R.id.txtStep6);
-
-
-                txtStep1_koi = findViewById(R.id.txtStep1_koi);
-                txtStep2_koi = findViewById(R.id.txtStep2_koi);
-                txtStep3_koi = findViewById(R.id.txtStep3_koi);
-                txtStep4_koi = findViewById(R.id.txtStep4_koi);
-                txtStep5_koi = findViewById(R.id.txtStep5_koi);
-                txtStep6_koi = findViewById(R.id.txtStep6_koi);
-                txtStep7_koi = findViewById(R.id.txtStep7_koi);
-                txtStep8_koi = findViewById(R.id.txtStep8_koi);
-                txtStep9_koi = findViewById(R.id.txtStep9_koi);
-                txtStep10_koi = findViewById(R.id.txtStep10_koi);
-                txtStep11_koi = findViewById(R.id.txtStep11_koi);
-                txtStep12_koi = findViewById(R.id.txtStep12_koi);
-                txtStep13_koi = findViewById(R.id.txtStep13_koi);
-                txtStep14_koi = findViewById(R.id.txtStep14_koi);
-                txtStep15_koi = findViewById(R.id.txtStep15_koi);
-                txtStep16_koi = findViewById(R.id.txtStep16_koi);
-                txtStep17_koi = findViewById(R.id.txtStep17_koi);
-                txtStep18_koi = findViewById(R.id.txtStep18_koi);
-                txtStep19_koi = findViewById(R.id.txtStep19_koi);
-                txtStep20_koi = findViewById(R.id.txtStep20_koi);
-                txtStep21_koi = findViewById(R.id.txtStep21_koi);
-                txtStep22_koi = findViewById(R.id.txtStep22_koi);
-                txtStep23_koi = findViewById(R.id.txtStep23_koi);
-                txtStep24_koi = findViewById(R.id.txtStep24_koi);
-
+                txtBaseFlat = findViewById(R.id.txtBaseFlat);
+                txtBaseFlat.setText(String.valueOf(currentBetAmount));
 
                 break;
             default:
@@ -912,6 +886,16 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case Brains.BODY_GUARD:
                     if (count < 2) {
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "Yes", "Yes", "Yes"));
+                    } else {
+                        cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "No", isSkip, isWait));
+                    }
+
+
+                    break;
+                case Brains.FOLLOW_TREND:
+
+                    if (count < 3) {
                         cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "Yes", "Yes", "Yes"));
                     } else {
                         cardDatabaseHelper.insertCard(new Card(0, cardItem, getFirstLetterFromString(txtPrediction.getText().toString()), selectedBrain, "No", isSkip, isWait));
@@ -1226,6 +1210,9 @@ public class MainActivity extends AppCompatActivity {
                 case Brains.BODY_GUARD:
                     BodyGuard(list);
                     break;
+                case Brains.FOLLOW_TREND:
+                    MatrixTrigger(list);
+                    break;
                 default:
                     // Handle the case where selectedBrain doesn't match any known type
                     // Add appropriate error handling or default behavior
@@ -1303,6 +1290,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void MatrixTrigger(List<Card> list) {
+
+        Card lastItem = list.stream().reduce((first, second) -> second).orElse(null);
+
+        if (lastItem != null) {
+            ProcessFTrend(list);
+            if (!isUndo) {
+                getTrackerView(lastItem);
+            }
+        }
+
+    }
 
     private void ChopStreak(List<Card> list) {
 
@@ -1366,7 +1365,7 @@ public class MainActivity extends AppCompatActivity {
                 case MoneyManagement.Mang_B:
                     // MangB(r);
                     break;
-                case MoneyManagement.KOI:
+                case MoneyManagement.FLAT:
                     // MangB(r);
                     break;
 
@@ -1419,15 +1418,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (lastResult.equalsIgnoreCase("L")) {
 
-//                betsList.add(Double.parseDouble("-" + txtBetAmount.getText()));
-
             betsList.add(roundToOneDecimalPlace(Double.parseDouble("-" + currentBetAmount)));
-
             double lastBetAmount = currentBetAmount;
-
-//            double refinedLastBetAmount = (lastBetAmount > 0) ? -1 * lastBetAmount : lastBetAmount;
-
-//            currentBetAmount = refinedLastBetAmount;
             txtBetAmount.setText(String.valueOf(roundToOneDecimalPlace(currentBetAmount)).replace("-", ""));
             setBetsView();
         }
@@ -1672,6 +1664,52 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void ProcessFTrend(List<Card> list) {
+
+
+        List<String> nameList = list.stream()
+                .map(Card::getName)
+                .collect(Collectors.toList());
+
+
+        //Note: Do not move these code to any line
+        String outcome = "";
+        if (list.size() >= 3) {
+
+            String pattern = getFtrendPattern(3, nameList);
+            outcome = FTrend.patternMap.getOrDefault(pattern, "Wait");
+
+//            if(pattern.equalsIgnoreCase("BPB") && list.size() >= 4){
+//                String bbpbPattern = getFtrendPattern(4,nameList);
+//                if(!bbpbPattern.equalsIgnoreCase("BBPB")){
+//                    SetPredictionView(outcome);
+//                }
+//            }else if(pattern.equalsIgnoreCase("PBP") && list.size() >= 4){
+//                String ppbpPattern = getFtrendPattern(4,nameList);
+//                if(!ppbpPattern.equalsIgnoreCase("PPBP")){
+//                    SetPredictionView(outcome);
+//                }
+//            }else{
+            SetPredictionView(outcome);
+//            }
+
+            System.out.println("outcome:" + pattern + "outcome:" + outcome);
+        }
+
+    }
+
+
+    private String getFtrendPattern(int n, List<String> list) {
+        List<String> lastThreeItems = getLastNItems(list, n);
+
+        String pattern = lastThreeItems.stream()
+                .skip(Math.max(0, lastThreeItems.size() - n))
+                .collect(Collectors.joining(""));
+
+
+        return pattern;
+    }
+
 
     private void ProcessChopStreak(List<Card> list) {
 
@@ -1840,19 +1878,14 @@ public class MainActivity extends AppCompatActivity {
     private void addAllMoneyManagementItemsToDaTabase() {
 
         moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.ORC, MoneyManagement.ORC_DESCRIPTION, false));
-        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.OSCAR, MoneyManagement.OSCAR_DESCRIPTION, true));
-//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.MOON, MoneyManagement.MOON_DESCRIPTION, false));
-//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.Mang_B, MoneyManagement.Mang_B_DESCRIPTION, false));
-//        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.KOI, MoneyManagement.KOI_DESCRIPTION, false));
+        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.OSCAR, MoneyManagement.OSCAR_DESCRIPTION, false));
+        moneyManagementDatabaseHelper.save(new MoneyManagementModel(MoneyManagement.FLAT, MoneyManagement.FLAT_DESCRIPTION, true));
+
     }
 
     private void addAllBrainsItemsToDaTabase() {
-
-        brainsDatabaseHelper.save(new Brains(Brains.STAR_BLAZE, false));
-        brainsDatabaseHelper.save(new Brains(Brains.CHOP_STREAK, false));
-        brainsDatabaseHelper.save(new Brains(Brains.ZIGZAG_STREAK, false));
         brainsDatabaseHelper.save(new Brains(Brains.TIAMAT, false));
-//        brainsDatabaseHelper.save(new Brains(Brains.BODY_GUARD, false));
+        brainsDatabaseHelper.save(new Brains(Brains.FOLLOW_TREND, false));
     }
 
 

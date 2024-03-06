@@ -7,14 +7,18 @@ public class Tiamat {
     public static final Map<String, String> patternMap = new HashMap<>();
 
     static {
+
         patternMap.put("B", "P");
         patternMap.put("P", "B");
         patternMap.put("PB", "P");
+        patternMap.put("BB", "P");
+        patternMap.put("PP", "B");
         patternMap.put("BP", "B");
         patternMap.put("PPB", "P");
         patternMap.put("PBP", "B");
         patternMap.put("BBP", "B");
         patternMap.put("BPB", "P");
+        patternMap.put("BBB", "P");
         patternMap.put("PBB", "P");
         patternMap.put("PBBB", "B");
         patternMap.put("PPBP", "B");
@@ -57,8 +61,6 @@ public class Tiamat {
         patternMap.put("BPBPP", "B");
         patternMap.put("BPPBB", "P");
         patternMap.put("BPPPB", "B");
-
-
 
     }
 }
